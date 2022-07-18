@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 import 'source-map-support/register';
 import * as cdk from 'aws-cdk-lib';
-import { validateClusters } from './utils/parse';
+import { validateClusterConfig } from './utils/parse';
 import { VPCStack } from './utils/vpc-stack';
-import { aws_eks as eks, aws_ec2 as ec2} from 'aws-cdk-lib';
+import { aws_eks as eks } from 'aws-cdk-lib';
 import { ClusterStack } from './stacks/cluster-stack';
 const yaml = require('js-yaml')
 
@@ -19,7 +19,7 @@ export function deployClusters(app: cdk.App, data: any) : Map<string, ClusterSta
       }
     })
 
-    validateClusters(data)
+    validateClusterConfig(data)
     for(const [key, value] of Object.entries(data['clusters'])){
       const val = Object(value)
       const versionKubernetes = eks.KubernetesVersion.of(String(val['version']));

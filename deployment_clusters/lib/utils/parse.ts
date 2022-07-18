@@ -7,7 +7,7 @@ const supportedLaunchTypes = new Set(['ec2', 'fargate']);
 const supportedNodeSizes = new Set(['medium', 'large', 'xlarge', '2xlarge', '4xkarge', '8xlarge', '12xlarge', '16xlarge', '24xlarge', 'metal']);
 
 
-export function validateClusters(info: Object){
+export function validateClusterConfig(info: Object){
     const data = Object(info)
     if(!data['clusters']){
         throw new Error('No clusters field being filed in the yaml file')

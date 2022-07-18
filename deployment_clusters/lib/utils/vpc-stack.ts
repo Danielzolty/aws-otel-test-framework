@@ -26,35 +26,24 @@ export class VPCStack extends Stack {
         ManagedPolicy.fromAwsManagedPolicyName("AmazonEKS_CNI_Policy")
       ]
     });
-
-
-    
-
-    this.vpc = new ec2.Vpc(this, 'EKSVpc',
-     {cidr: "10.0.0.0/16",
-     natGateways: 1,
-     vpnGateway: true,
-     availabilityZones: ['us-west-2a', 'us-west-2b', 'us-west-2c'],
-     subnetConfiguration: [
-      {
-        cidrMask: 24,
-        subnetType: ec2.SubnetType.PRIVATE_WITH_NAT,
-        name: 'private_subnet'
-      },
-      {
-        cidrMask: 24,
-        subnetType: ec2.SubnetType.PUBLIC,
-        name: "public_subnet"
-      }
-     ] 
-    });  
-
-    
-
+  
+    this.vpc = new ec2.Vpc(this, 'EKSVpc', {
+      cidr: "10.0.0.0/16",
+      natGateways: 1,
+      vpnGateway: true,
+      availabilityZones: ['us-west-2a', 'us-west-2b', 'us-west-2c'],
+      subnetConfiguration: [
+        {
+          cidrMask: 24,
+          subnetType: ec2.SubnetType.PRIVATE_WITH_NAT,
+          name: 'private_subnet'
+        },
+        {
+          cidrMask: 24,
+          subnetType: ec2.SubnetType.PUBLIC,
+          name: "public_subnet"
+        }
+      ]  
+    });
   }
-
-
-  
-
-  
 }
