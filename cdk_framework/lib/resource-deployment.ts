@@ -40,7 +40,7 @@ export function deployResources(app: cdk.App, clusterStackMap: Map<string, Clust
     // deploy resources
 
     // add Namespace resource
-    const aocNamespaceConstruct = new AOCNamespaceConstruct(clusterStack, 'aoc-ns-construct', {
+    const aocNamespaceConstruct = new AOCNamespaceConstruct(clusterStack, 'aoc-namespace-construct', {
         cluster: cluster
     })
 
@@ -56,6 +56,7 @@ export function deployResources(app: cdk.App, clusterStackMap: Map<string, Clust
         aocNamespaceConstruct: aocNamespaceConstruct,
         region: region
     })
+    // Unfortunately it doesn't seem that this dependency is being inferred so need to add it explicitely
     sampleAppDeploymentConstruct.node.addDependency(aocNamespaceConstruct)
 
     // // add AOC Config Map resource

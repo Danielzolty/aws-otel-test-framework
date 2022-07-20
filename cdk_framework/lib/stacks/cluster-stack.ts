@@ -20,7 +20,7 @@ export class ClusterStack extends Stack {
         ]
 
         if(props.launch_type === 'ec2'){
-            this.cluster = new eks.Cluster(this, props.name+'-Cluster', {
+            this.cluster = new eks.Cluster(this, props.name, {
                 clusterName: props.name,
                 vpc: props.vpc,
                 defaultCapacity: 0,  // we want to manage capacity our selves
@@ -42,7 +42,7 @@ export class ClusterStack extends Stack {
 
         if(props.launch_type === 'fargate'){
             console.log("Fargate starting")
-            this.cluster = new eks.FargateCluster(this, props.name + '-Cluster', {
+            this.cluster = new eks.FargateCluster(this, props.name, {
                 clusterName: props.name,
                 vpc: props.vpc,
                 version: props.version,
@@ -50,7 +50,7 @@ export class ClusterStack extends Stack {
             });
         }
 
-        const auth = new AwsAuth(this,"clusterAuth"+props.name,{
+        const auth = new AwsAuth(this, "cluster-auth", {
             cluster: this.cluster,
         })
         auth.addMastersRole(Role.fromRoleName(this, "eks-admin-role", "Admin"))

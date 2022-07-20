@@ -13,7 +13,7 @@ export class VPCStack extends Stack {
         super(scope, id, props);
 
         // IAM role for our EC2 worker nodes
-        const workerRole = new iam.Role(this, 'EKSWorkerRole', {
+        const workerRole = new iam.Role(this, 'EKS-worker-role', {
         assumedBy: new iam.ServicePrincipal('ec2.amazonaws.com'),
         managedPolicies: [
             ManagedPolicy.fromAwsManagedPolicyName("AmazonPrometheusRemoteWriteAccess"),
@@ -27,7 +27,7 @@ export class VPCStack extends Stack {
         ]
         });
     
-        this.vpc = new ec2.Vpc(this, 'EKSVpc', {
+        this.vpc = new ec2.Vpc(this, 'EKS-VPC', {
             cidr: "10.0.0.0/16",
             natGateways: 1,
             vpnGateway: true,

@@ -32,7 +32,7 @@ export function deployClusters(app: cdk.App) : Map<string, ClusterStack> {
         throw new Error ('Resource environment variable not set')
     }
     //TODO: Add "Stack" to the name  
-    const vs = new VPCStack(app, "EKSVpcStack", {
+    const vs = new VPCStack(app, 'EKS-VPC-stack', {
         env: {
             region: region
         }
@@ -43,13 +43,13 @@ export function deployClusters(app: cdk.App) : Map<string, ClusterStack> {
     for(const [key, value] of Object.entries(clusterConfigData['clusters'])){
         const val = Object(value)
         const versionKubernetes = eks.KubernetesVersion.of(String(val['version']));
-        const newStack = new ClusterStack(app, key + "Stack", {
+        const newStack = new ClusterStack(app, `${key}-stack`, {
             launch_type: String(val['launch_type']),
             name: key,
             vpc: vs.vpc,
             version: versionKubernetes,
-            cpu: String(val["cpu_architecture"]),
-            node_size: String(val["node_size"]),
+            cpu: String(val['cpu_architecture']),
+            node_size: String(val['node_size']),
             env: {
                 region: region
             },
