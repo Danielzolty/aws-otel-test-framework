@@ -9,7 +9,7 @@ export class AOCNamespaceConstruct extends Construct{
         super(scope, id);
         
         // define the manifest
-        //TODO: This should be set to a true random value
+        //TODO: This should be set to a random value
         const random_value = 1
         this.name = 'aoc-ns-' + random_value
         const aocNsManifest = {
