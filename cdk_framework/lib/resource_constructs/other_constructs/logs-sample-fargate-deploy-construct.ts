@@ -6,7 +6,7 @@ export class LogsSampleFargateDeployConstruct extends Construct{
     constructor(scope: Construct, id: string, props: LogsSampleFargateDeployConstructProps){
         super(scope, id);
         const logsSampleFargateDeployManifest = {
-            yamlBody: templatefile("./container-insights-agent/logs_sample_fargate.yml",
+            yamlBody: templatefile('./container-insights-agent/logs_sample_fargate.yml',
                                     {
                                         Namespace : tolist(aws_eks_fargate_profile.test_profile[count.index].selector)[0].namespace
                                     }

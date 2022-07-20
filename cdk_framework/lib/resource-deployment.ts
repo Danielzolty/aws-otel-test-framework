@@ -47,7 +47,7 @@ export function deployResources(app: cdk.App, clusterStackMap: Map<string, Clust
     // add Sample App resource
     const region = process.env.REGION
     if (region == undefined){
-        throw new Error ('Resource environment variable not set')
+        throw new Error ('Region environment variable not set')
     }
     const sampleAppDeploymentConstruct = new SampleAppDeploymentConstruct(clusterStack, 'sample-app-deployment-construct', {
         cluster : cluster,

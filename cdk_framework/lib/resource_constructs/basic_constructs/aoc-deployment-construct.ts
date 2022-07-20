@@ -10,15 +10,15 @@ export class AOCDeploymentConstruct extends Construct{
         super(scope, id);
         const aocManifest = {
             apiVersion: 'v1',
-            kind: "Deployment",
+            kind: 'Deployment',
 
             metadata: {
-                name: "aoc",
-                //namespace: var.deployment_type == "fargate" ? tolist(aws_eks_fargate_profile.test_profile[count.index].selector)[0].namespace : kubernetes_namespace.aoc_ns.metadata[0].name,
+                name: 'aoc',
+                //namespace: var.deployment_type == 'fargate' ? tolist(aws_eks_fargate_profile.test_profile[count.index].selector)[0].namespace : kubernetes_namespace.aoc_ns.metadata[0].name,
                 //Using a hard-coded NS
                 namespace: props.aocNamespaceConstruct.name,
                 labels: {
-                    app: "aoc"
+                    app: 'aoc'
                 }
             },
             
@@ -43,9 +43,9 @@ export class AOCDeploymentConstruct extends Construct{
                     },
             
                     spec: {
-                        // serviceAccountName: "aoc-role-${module.common.testing_id}",
+                        // serviceAccountName: 'aoc-role-${module.common.testing_id}',
                         // hard-coded the testing ID, need to use a random ID generator (search random_id to see how terraform does it)
-                        serviceAccountName: "aoc-role-1",
+                        serviceAccountName: 'aoc-role-1',
                         automountServiceAccountToken: true,
                         
                         volumes: [
@@ -76,13 +76,13 @@ export class AOCDeploymentConstruct extends Construct{
 
                         containers: [
                             {
-                                name: "mocked-server",
+                                name: 'mocked-server',
                                 image: local.mocked_server_image,
-                                imagePullPolicy: "Always",
+                                imagePullPolicy: 'Always',
                         
                                 readinessProbe: {
                                     httpGet: {
-                                        path: "/",
+                                        path: '/',
                                         port: 8080
                                     },
                                     initialDelaySeconds: 10,
@@ -90,30 +90,30 @@ export class AOCDeploymentConstruct extends Construct{
                                 }
                             },
                             {
-                                name: "aoc",
+                                name: 'aoc',
                                 //image: module.common.aoc_image,
                                 // from outputs.tf -> common.tf
-                                image: "public.ecr.aws/aws-otel-test/adot-collector-integration-test:latest",
-                                imagePullPolicy: "Always",
+                                image: 'public.ecr.aws/aws-otel-test/adot-collector-integration-test:latest',
+                                imagePullPolicy: 'Always',
                                 args: [
-                                "--config=/aoc/aoc-config.yml"],
+                                '--config=/aoc/aoc-config.yml'],
                                 // this config will be passed in as a prop
                                 args:[],
                         
                                 resources: {
                                     limits: {
-                                        cpu: "0.2",
-                                        memory: "256Mi"
+                                        cpu: '0.2',
+                                        memory: '256Mi'
                                     }
                                 },
 
                                 volumeMounts: [
                                     {
-                                        mountPath: "/aoc",
+                                        mountPath: '/aoc',
                                         name: props.aocConfigMapConstruct.name
                                     },
                                     {
-                                        mountPath: "/etc/pki/tls/certs",
+                                        mountPath: '/etc/pki/tls/certs',
                                         name: props.mockedServerCertConstruct.name
                                     }
                                 ]

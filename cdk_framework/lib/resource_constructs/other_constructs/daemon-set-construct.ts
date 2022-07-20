@@ -6,7 +6,7 @@ export class DaemonSetConstruct extends Construct{
     constructor(scope: Construct, id: string, props: DaemonSetConstructProps){
         super(scope, id);
         const daemonSetManifest = {
-            kind: "DaemonSet",
+            kind: 'DaemonSet',
 
             yamlBody: data.template_file.daemonset_file[count.index].rendered
             

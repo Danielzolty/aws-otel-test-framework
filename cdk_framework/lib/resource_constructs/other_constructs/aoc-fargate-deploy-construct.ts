@@ -7,8 +7,8 @@ export class aocFargateDeployConstruct extends Construct{
         super(scope, id);
         // TODO: Confirm this is of kind service
         const aocFargateDeployManifest = {
-            kind: "Service",
-            yamlBody: templatefile("./container-insights-agent/stateful_set_fargate.yml",
+            kind: 'Service',
+            yamlBody: templatefile('./container-insights-agent/stateful_set_fargate.yml',
                                         {
                                             ClusterName : var.eks_cluster_name,
                                             AocRepo : var.aoc_image_repo,

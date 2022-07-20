@@ -27,21 +27,19 @@ export class ClusterStack extends Stack {
                 version: props.version,
                 clusterLogging: logging
             });
-            if (props.cpu === "arm_64"){
+            if (props.cpu === 'arm_64'){
                 this.cluster.addNodegroupCapacity('ng-arm', {
                     instanceTypes: [new ec2.InstanceType('m6g.' + props.node_size)],
                     minSize: 2
                 })
-            } else if (props.cpu === "amd_64") {
+            } else if (props.cpu === 'amd_64') {
                 this.cluster.addNodegroupCapacity('ng-amd', {
                     instanceTypes: [new ec2.InstanceType('m5.' + props.node_size)],
                     minSize: 2
                 })
             }
-        }
-
-        if(props.launch_type === 'fargate'){
-            console.log("Fargate starting")
+        } else if(props.launch_type === 'fargate'){
+            console.log('Fargate starting')
             this.cluster = new eks.FargateCluster(this, props.name, {
                 clusterName: props.name,
                 vpc: props.vpc,
@@ -50,10 +48,10 @@ export class ClusterStack extends Stack {
             });
         }
 
-        const auth = new AwsAuth(this, "cluster-auth", {
+        const auth = new AwsAuth(this, 'cluster-auth', {
             cluster: this.cluster,
         })
-        auth.addMastersRole(Role.fromRoleName(this, "eks-admin-role", "Admin"))
+        auth.addMastersRole(Role.fromRoleName(this, 'eks-admin-role', 'Admin'))
   }
 }
 

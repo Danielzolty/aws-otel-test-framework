@@ -7,9 +7,9 @@ export class ConfigMapConstruct extends Construct{
         super(scope, id);
         const configMapManifest = {
             apiVersion: 'v1',
-            kind: "ConfigMap",
+            kind: 'ConfigMap',
             
-            yamlBody: var.deployment_type == "fargate" ? templatefile("./container-insights-agent/config_map_fargate.yml",
+            yamlBody: var.deployment_type == 'fargate' ? templatefile('./container-insights-agent/config_map_fargate.yml',
                                                                         {
                                                                             Namespace : tolist(aws_eks_fargate_profile.test_profile[count.index].selector)[0].namespace,
                                                                             TestingId : module.common.testing_id

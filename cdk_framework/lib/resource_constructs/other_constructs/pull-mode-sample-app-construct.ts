@@ -9,9 +9,9 @@ export class PullModeSampleAppDeploymentConstruct extends Construct {
    constructor(scope: Construct, id: string, props: PullModeSampleAppDeploymentConstructProps) {
       super(scope, id);
     
-      this.sampleAppLabelSelector = "sample-app"
+      this.sampleAppLabelSelector = 'sample-app'
       const pullModeAppManifest = {
-        kind: "Deployment",
+        kind: 'Deployment',
         
         metadata: {
             name: this.sampleAppLabelSelector,
@@ -41,35 +41,35 @@ export class PullModeSampleAppDeploymentConstruct extends Construct {
                     //sample app
                     container: {
                         name: this.sampleAppLabelSelector,
-                        image: local.eks_pod_config["image"],
-                        imagePullPolicy: "Always",
-                        command: length(local.eks_pod_config["command"]) != 0 ? local.eks_pod_config["command"] : null,
-                        args: length(local.eks_pod_config["args"]) != 0 ? local.eks_pod_config["args"] : null,
+                        image: local.eks_pod_config['image'],
+                        imagePullPolicy: 'Always',
+                        command: length(local.eks_pod_config['command']) != 0 ? local.eks_pod_config['command'] : null,
+                        args: length(local.eks_pod_config['args']) != 0 ? local.eks_pod_config['args'] : null,
                         env: [
                             {
-                                name: "AWS_REGION",
+                                name: 'AWS_REGION',
                                 value: var.region
                             },
                             {
-                                name: "INSTANCE_ID",
+                                name: 'INSTANCE_ID',
                                 value: var.testing_id
                             },
                             {
-                                name: "LISTEN_ADDRESS",
-                                value: "${var.sample_app.listen_address_ip}:${var.sample_app.listen_address_port}"
+                                name: 'LISTEN_ADDRESS',
+                                value: '${var.sample_app.listen_address_ip}:${var.sample_app.listen_address_port}'
                             }
                         ],
 
                         resources: {
                             limits: {
-                                cpu: "0.2",
-                                memory: "256Mi"
+                                cpu: '0.2',
+                                memory: '256Mi'
                             }
                         },
 
                         readiness_probe: {
                             http_get: {
-                                path: "/",
+                                path: '/',
                                 port: var.sample_app.listen_address_port
                             },
                             initialDelaySeconds: 10,

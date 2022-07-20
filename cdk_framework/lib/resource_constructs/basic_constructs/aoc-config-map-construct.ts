@@ -18,7 +18,7 @@ export class AOCConfigMapConstruct extends Construct{
             },
             
             data: {
-              "aoc-config.yml": props.aocConfig
+              'aoc-config.yml': props.aocConfig
             },
 
             depends_on: [aws_eks_fargate_profile.test_profile]

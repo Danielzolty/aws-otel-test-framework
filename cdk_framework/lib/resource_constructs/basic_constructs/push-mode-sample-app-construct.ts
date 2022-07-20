@@ -9,7 +9,7 @@ export class PushModeSampleAppDeploymentConstruct extends Construct {
    constructor(scope: Construct, id: string, props: PushModeSampleAppDeploymentConstructProps) {
       super(scope, id);
 
-      this.sampleAppLabelSelector = "sample-app"
+      this.sampleAppLabelSelector = 'sample-app'
 
       // configs
       // Using hard-coded values ultimately from push_mode_samples.tf and output.tf (assuming not adot operator)
@@ -20,7 +20,7 @@ export class PushModeSampleAppDeploymentConstruct extends Construct {
 
       const pushModeSampleAppManifest = {
          apiVersion: 'apps/v1',
-         kind: "Deployment",
+         kind: 'Deployment',
          
          metadata: {
             name: this.sampleAppLabelSelector,
@@ -54,76 +54,76 @@ export class PushModeSampleAppDeploymentConstruct extends Construct {
                   containers: [
                      {
                         name: this.sampleAppLabelSelector,
-                        //image: local.eks_pod_config["image"],
+                        //image: local.eks_pod_config['image'],
                         image: props.sampleAppImageURL,
-                        imagePullPolicy: "Always",
-                        //command: length(local.eks_pod_config["command"]) != 0 ? local.eks_pod_config["command"] : null,
+                        imagePullPolicy: 'Always',
+                        //command: length(local.eks_pod_config['command']) != 0 ? local.eks_pod_config['command'] : null,
                         command: null,
-                        //args: length(local.eks_pod_config["args"]) != 0 ? local.eks_pod_config["args"] : null,
+                        //args: length(local.eks_pod_config['args']) != 0 ? local.eks_pod_config['args'] : null,
                         args: null,
 
                         env: [
                            {
-                              name: "OTEL_EXPORTER_OTLP_ENDPOINT",
-                              //value: var.is_adot_operator ? "http://aoc-collector:${var.aoc_service.grpc_port}" : "http://${kubernetes_service.aoc_grpc_service[0].metadata[0].name}:${var.aoc_service.grpc_port}"
+                              name: 'OTEL_EXPORTER_OTLP_ENDPOINT',
+                              //value: var.is_adot_operator ? 'http://aoc-collector:${var.aoc_service.grpc_port}' : 'http://${kubernetes_service.aoc_grpc_service[0].metadata[0].name}:${var.aoc_service.grpc_port}'
                               value : `http://aoc-grpc:${grpcPort}`
                            },
                            {
-                              name: "COLLECTOR_UDP_ADDRESS",
-                              // value: "${kubernetes_service.aoc_udp_service[0].metadata[0].name}:${var.aoc_service.udp_port}"
+                              name: 'COLLECTOR_UDP_ADDRESS',
+                              // value: '${kubernetes_service.aoc_udp_service[0].metadata[0].name}:${var.aoc_service.udp_port}'
                               value: `aoc-udp:${udpPort}`
                            },
                            {
-                              name: "AWS_XRAY_DAEMON_ADDRESS",
-                              //value: "${kubernetes_service.aoc_udp_service[0].metadata[0].name}:${var.aoc_service.udp_port}"
+                              name: 'AWS_XRAY_DAEMON_ADDRESS',
+                              //value: '${kubernetes_service.aoc_udp_service[0].metadata[0].name}:${var.aoc_service.udp_port}'
                               value: `aoc-udp:${udpPort}`
                            },
                            {
-                              name: "AWS_REGION",
+                              name: 'AWS_REGION',
                               //value: var.region
                               value: props.region
                            },
                            {
-                              name: "INSTANCE_ID",
+                              name: 'INSTANCE_ID',
                               // value: var.testing_id
-                              value: "1"
+                              value: '1'
                            },
                            {
-                              name: "OTEL_RESOURCE_ATTRIBUTES",
-                              // value: "service.namespace=${var.sample_app.metric_namespace},service.name=${var.aoc_service.name}"
-                              value: "service.namespace=aws-otel,service.name=aws-otel-integ-test"
+                              name: 'OTEL_RESOURCE_ATTRIBUTES',
+                              // value: 'service.namespace=${var.sample_app.metric_namespace},service.name=${var.aoc_service.name}'
+                              value: 'service.namespace=aws-otel,service.name=aws-otel-integ-test'
                            },
                            {
-                              name: "LISTEN_ADDRESS",
-                              //value: "${var.sample_app.listen_address_ip}:${var.sample_app.listen_address_port}"
+                              name: 'LISTEN_ADDRESS',
+                              //value: '${var.sample_app.listen_address_ip}:${var.sample_app.listen_address_port}'
                               value: `0.0.0.0:${listenAddressPort}`
                            },
                            {
-                              name: "JAEGER_RECEIVER_ENDPOINT",
-                              // value: "${kubernetes_service.aoc_tcp_service[0].metadata[0].name}:${var.aoc_service.http_port}"
+                              name: 'JAEGER_RECEIVER_ENDPOINT',
+                              // value: '${kubernetes_service.aoc_tcp_service[0].metadata[0].name}:${var.aoc_service.http_port}'
                               value: `aoc-tcp:${httpPort}`
                            },
                            {
-                              name: "ZIPKIN_RECEIVER_ENDPOINT",
-                              // value: "${kubernetes_service.aoc_tcp_service[0].metadata[0].name}:${var.aoc_service.http_port}"
+                              name: 'ZIPKIN_RECEIVER_ENDPOINT',
+                              // value: '${kubernetes_service.aoc_tcp_service[0].metadata[0].name}:${var.aoc_service.http_port}'
                               value: `aoc-tcp:${httpPort}`
                            },
                            {
-                              name: "OTEL_METRICS_EXPORTER",
-                              value: "otlp"
+                              name: 'OTEL_METRICS_EXPORTER',
+                              value: 'otlp'
                            }
                         ] ,
 
                         resources: {
                            limits: {
-                              cpu: "0.2",
-                              memory: "256Mi"
+                              cpu: '0.2',
+                              memory: '256Mi'
                            }
                         },
 
                         readinessProbe: {
                            httpGet: {
-                              path: "/",
+                              path: '/',
                               //port: var.sample_app.listen_address_port
                               port: listenAddressPort
                            },

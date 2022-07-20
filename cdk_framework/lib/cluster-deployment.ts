@@ -29,9 +29,8 @@ export function deployClusters(app: cdk.App) : Map<string, ClusterStack> {
     // set up VPC
     const region = process.env.REGION
     if (region == undefined){
-        throw new Error ('Resource environment variable not set')
+        throw new Error ('Region environment variable not set')
     }
-    //TODO: Add "Stack" to the name  
     const vs = new VPCStack(app, 'EKS-VPC-stack', {
         env: {
             region: region
