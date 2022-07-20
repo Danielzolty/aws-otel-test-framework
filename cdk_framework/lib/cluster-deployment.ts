@@ -27,7 +27,10 @@ export function deployClusters(app: cdk.App) : Map<string, ClusterStack> {
     validateClusterConfig(clusterConfigData)
 
     // set up VPC
-    const REGION = process.env.REGION || 'us-west-2'
+    const REGION = process.env.REGION
+    if (REGION == undefined){
+        throw new Error ('No region provided')
+    }
     //TODO: Add "Stack" to the name  
     const vs = new VPCStack(app, "EKSVpc", {
         env: {
@@ -53,6 +56,5 @@ export function deployClusters(app: cdk.App) : Map<string, ClusterStack> {
         })
         clusterStackMap.set(key, newStack)
     }
-
     return clusterStackMap
 }

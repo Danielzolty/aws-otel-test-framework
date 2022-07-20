@@ -11,6 +11,7 @@ export class PushModeSampleAppDeploymentConstruct extends Construct {
 
       this.sampleAppLabelSelector = "sample-app"
 
+      // Using hard-coded values ultimately from push_mode_samples.tf and output.tf (assuming not adot operator)
       const grpcPort = 4317
       const udpPort = 55690
       const listenAddressPort = 4567
@@ -63,7 +64,6 @@ export class PushModeSampleAppDeploymentConstruct extends Construct {
                            {
                               name: "OTEL_EXPORTER_OTLP_ENDPOINT",
                               //value: var.is_adot_operator ? "http://aoc-collector:${var.aoc_service.grpc_port}" : "http://${kubernetes_service.aoc_grpc_service[0].metadata[0].name}:${var.aoc_service.grpc_port}"
-                              // Using hard-coded values ultimately from push_mode_samples.tf and output.tf (assuming not adot operator)
                               value : `http://aoc-grpc:${grpcPort}`
                            },
                            {
@@ -131,9 +131,7 @@ export class PushModeSampleAppDeploymentConstruct extends Construct {
                            httpGet: {
                               path: "/",
                               //port: var.sample_app.listen_address_port
-                              //Using a hard-coded port from outputs.tf
-                              //Does this need to be a string?
-                              port: "4567"
+                              port: listenAddressPort
                            },
                            initialDelaySeconds: 10,
                            periodSeconds: 5
