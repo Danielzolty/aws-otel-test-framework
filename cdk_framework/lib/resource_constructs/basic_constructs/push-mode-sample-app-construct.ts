@@ -10,6 +10,11 @@ export class PushModeSampleAppDeploymentConstruct extends Construct {
       super(scope, id);
 
       this.sampleAppLabelSelector = "sample-app"
+
+      const grpcPort = 4317
+      const udpPort = 55690
+      const listenAddressPort = 4567
+      const httpPort = 9411
       const pushModeAppManifest = {
          apiVersion: 'apps/v1',
          kind: "Deployment",
@@ -59,19 +64,19 @@ export class PushModeSampleAppDeploymentConstruct extends Construct {
                               name: "OTEL_EXPORTER_OTLP_ENDPOINT",
                               //value: var.is_adot_operator ? "http://aoc-collector:${var.aoc_service.grpc_port}" : "http://${kubernetes_service.aoc_grpc_service[0].metadata[0].name}:${var.aoc_service.grpc_port}"
                               // Using hard-coded values ultimately from push_mode_samples.tf and output.tf (assuming not adot operator)
-                              value : "http://aoc-grpc:4317"
+                              value : `http://aoc-grpc:${grpcPort}`
                            },
                            {
                               name: "COLLECTOR_UDP_ADDRESS",
                               // value: "${kubernetes_service.aoc_udp_service[0].metadata[0].name}:${var.aoc_service.udp_port}"
                               // Using hard-coded values ultimately from push_mode_samples.tf and output.tf (assuming not adot operator)
-                              value: "aoc-udp:55690"
+                              value: `aoc-udp:${udpPort}`
                            },
                            {
                               name: "AWS_XRAY_DAEMON_ADDRESS",
                               //value: "${kubernetes_service.aoc_udp_service[0].metadata[0].name}:${var.aoc_service.udp_port}"
                               // Using hard-coded values ultimately from push_mode_samples.tf and output.tf
-                              value: "aoc-udp:55690"
+                              value: `aoc-udp:${udpPort}`
                            },
                            {
                               name: "AWS_REGION",
@@ -83,7 +88,7 @@ export class PushModeSampleAppDeploymentConstruct extends Construct {
                               name: "INSTANCE_ID",
                               // value: var.testing_id
                               // hard-coded, need to use a random ID generator (search random_id to see how terraform does it)
-                              value: 1
+                              value: "1"
                            },
                            {
                               name: "OTEL_RESOURCE_ATTRIBUTES",
@@ -95,19 +100,19 @@ export class PushModeSampleAppDeploymentConstruct extends Construct {
                               name: "LISTEN_ADDRESS",
                               //value: "${var.sample_app.listen_address_ip}:${var.sample_app.listen_address_port}"
                               //Using a hard-coded address and port ultimately from outputs.tf
-                              value: "0.0.0.0:4567"
+                              value: `0.0.0.0:${listenAddressPort}`
                            },
                            {
                               name: "JAEGER_RECEIVER_ENDPOINT",
                               // value: "${kubernetes_service.aoc_tcp_service[0].metadata[0].name}:${var.aoc_service.http_port}"
                               // Using hard-coded values ultimately from push_mode_samples.tf and output.tf
-                              value: "aoc-tcp:9411"
+                              value: `aoc-tcp:${httpPort}`
                            },
                            {
                               name: "ZIPKIN_RECEIVER_ENDPOINT",
                               // value: "${kubernetes_service.aoc_tcp_service[0].metadata[0].name}:${var.aoc_service.http_port}"
                               // Using hard-coded values ultimately from push_mode_samples.tf and output.tf
-                              value: "aoc-tcp:9411"
+                              value: `aoc-tcp:${httpPort}`
                            },
                            {
                               name: "OTEL_METRICS_EXPORTER",
