@@ -1,7 +1,8 @@
 ---
 testcase:
   clusterName: armCluster
-  sampleApp: 
+  sampleAppImageURL: http://dummy.url
+  sampleAppMode: push
   collectorConfig:
     receivers:
       otlp:

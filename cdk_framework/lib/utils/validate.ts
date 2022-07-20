@@ -9,21 +9,21 @@ const supportedNodeSizes = new Set(['medium', 'large', 'xlarge', '2xlarge', '4xk
 
 export function validateClusterConfig(info: Object){
     const data = Object(info)
-    if(!data['clusters']){
-        throw new Error('No clusters field being filed in the yaml file')
+    if (!data['clusters']){
+        throw new Error('No clusters field in the yaml file')
     }
-    const clusterInfo = data['clusters']
-    for(const [key, value] of Object.entries(clusterInfo)){
+    const clusterConfig = data['clusters']
+    for (const [key, value] of Object.entries(clusterConfig)){
         
         const val = Object(value)
-        if(Object.keys(val).length !== 4){
+        if (Object.keys(val).length !== 4){
             throw new Error("Didn't set all the fields for the clusters")
         }
-        for(const [k, v] of Object.entries(val)){
+        for (const [k, v] of Object.entries(val)){
             if(!supportedFields.has(k)){
                 throw new Error("Uncompatible field type")
             }
-            switch(k){
+            switch (k){
                 case 'version':
                     val[k] = validateVersion(String(v))
                     break;
@@ -42,6 +42,14 @@ export function validateClusterConfig(info: Object){
     }
 }
 
+export function validateTestcaseConfig(info: Object){
+    const data = Object(info)
+    if (!data['testcase']) {
+        throw new Error('No testcase field in the yaml file')
+    }
+    const testCaseConfig = data['testcase']
+    // TODO
+}
 
 
 function validateVersion(version: string){

@@ -11,6 +11,7 @@ export class PushModeSampleAppDeploymentConstruct extends Construct {
 
       this.sampleAppLabelSelector = "sample-app"
       const pushModeAppManifest = {
+         apiVersion: 'v1',
          kind: "Deployment",
          
          metadata: {
@@ -82,9 +83,9 @@ export class PushModeSampleAppDeploymentConstruct extends Construct {
                         },
                         {
                            name: "OTEL_RESOURCE_ATTRIBUTES",
-                           value: "service.namespace=${var.sample_app.metric_namespace},service.name=${var.aoc_service.name}"
-                           // 
-                           value: "service.namespace=,service.name="
+                           // value: "service.namespace=${var.sample_app.metric_namespace},service.name=${var.aoc_service.name}"
+                           // hard-coded ultimately from variables.tf
+                           value: "service.namespace=aws-otel,service.name=aws-otel-integ-test"
                         },
                         {
                            name: "LISTEN_ADDRESS",

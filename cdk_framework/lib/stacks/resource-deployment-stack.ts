@@ -16,40 +16,41 @@ export class ResourceDeploymentStack extends Stack {
         cluster: props.cluster
     })
 
-    // add Sample App resource
-    const sampleAppDeploymentConstruct = new SampleAppDeploymentConstruct(this, 'sample-app-deployment-construct', {
-        cluster : props.cluster,
-        sampleAppMode: props.sampleAppMode,
-        aocNamespaceConstruct: aocNamespaceConstruct
-    })
+    // // add Sample App resource
+    // const sampleAppDeploymentConstruct = new SampleAppDeploymentConstruct(this, 'sample-app-deployment-construct', {
+    //     cluster : props.cluster,
+    //     sampleAppImageURL: props.sampleAppImageURL,
+    //     sampleAppMode: props.sampleAppMode,
+    //     aocNamespaceConstruct: aocNamespaceConstruct
+    // })
 
-    // add AOC Config Map resource
-    const aocConfigMapConstruct = new AOCConfigMapConstruct(this, 'aoc-config-map-construct', {
-        cluster : props.cluster,
-        aocNamespaceConstruct : aocNamespaceConstruct,
-        aocConfig : props.aocConfig
-    })
+    // // add AOC Config Map resource
+    // const aocConfigMapConstruct = new AOCConfigMapConstruct(this, 'aoc-config-map-construct', {
+    //     cluster : props.cluster,
+    //     aocNamespaceConstruct : aocNamespaceConstruct,
+    //     aocConfig : props.aocConfig
+    // })
 
-    // add MockedServerCert resource
-    const mockedServerCertConstruct = new MockedServerCertConstruct(this, 'mocked-server-cert', {
-        cluster: props.cluster,
-        aocNamespaceConstruct: aocConfigMapConstruct
-    })
+    // // add MockedServerCert resource
+    // const mockedServerCertConstruct = new MockedServerCertConstruct(this, 'mocked-server-cert', {
+    //     cluster: props.cluster,
+    //     aocNamespaceConstruct: aocConfigMapConstruct
+    // })
 
-    // add AOCDeployment resource
-    const aocDeploymentConstruct = new AOCDeploymentConstruct(this, 'aoc-deployment-construct', {
-        cluster: props.cluster,
-        aocNamespaceConstruct: aocNamespaceConstruct,
-        sampleAppDeploymentConstruct: sampleAppDeploymentConstruct,
-        aocConfigMapConstruct: aocConfigMapConstruct,
-        mockedServerCertConstruct: mockedServerCertConstruct
-    })
+    // // add AOCDeployment resource
+    // const aocDeploymentConstruct = new AOCDeploymentConstruct(this, 'aoc-deployment-construct', {
+    //     cluster: props.cluster,
+    //     aocNamespaceConstruct: aocNamespaceConstruct,
+    //     sampleAppDeploymentConstruct: sampleAppDeploymentConstruct,
+    //     aocConfigMapConstruct: aocConfigMapConstruct,
+    //     mockedServerCertConstruct: mockedServerCertConstruct
+    // })
   }
 }
 
 export interface ResourceDeploymentStackProps extends StackProps {
     cluster: eks.ICluster
-    aocConfig : Object
+    sampleAppImageURL: string
     sampleAppMode: string
-    sampleAppImageUrl: string
+    aocConfig : Object
 }

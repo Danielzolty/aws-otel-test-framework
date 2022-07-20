@@ -11,6 +11,7 @@ export class AOCConfigMapConstruct extends Construct{
 
         this.name = 'otel-config'
         const aocConfigMapManifest = {
+            apiVersion: 'v1',
             metadata: {
               name: this.name,
               namespace: props.aocNamespaceConstruct.name

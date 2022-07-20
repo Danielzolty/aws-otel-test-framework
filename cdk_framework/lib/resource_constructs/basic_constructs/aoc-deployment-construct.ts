@@ -9,6 +9,7 @@ export class AOCDeploymentConstruct extends Construct{
     constructor(scope: Construct, id: string, props: AOCDeploymentConstructProps){
         super(scope, id);
         const aocManifest = {
+            apiVersion: 'v1',
             kind: "Deployment",
 
             metadata: {

@@ -6,6 +6,7 @@ export class ConfigMapConstruct extends Construct{
     constructor(scope: Construct, id: string, props: ConfigMapConstructProps){
         super(scope, id);
         const configMapManifest = {
+            apiVersion: 'v1',
             kind: "ConfigMap",
             
             yamlBody: var.deployment_type == "fargate" ? templatefile("./container-insights-agent/config_map_fargate.yml",

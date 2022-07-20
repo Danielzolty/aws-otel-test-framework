@@ -11,16 +11,18 @@ export class MockedServerCertConstruct extends Construct{
 
         this.name = 'mocked-server-cert'
         const mockedServerCertManifest = {
-            metadata: {
-              name: this.name,
-              namespace: props.aocNamespaceConstruct.name,
-            },
+          apiVersion: 'v1',
+
+          metadata: {
+            name: this.name,
+            namespace: props.aocNamespaceConstruct.name,
+          },
+        
+          data: {
+            "ca-bundle.crt": module.basic_components.0.mocked_server_cert_content
+          },
           
-            data: {
-              "ca-bundle.crt": module.basic_components.0.mocked_server_cert_content
-            },
-            
-            depends_on: [aws_eks_fargate_profile.test_profile]
+          depends_on: [aws_eks_fargate_profile.test_profile]
         }
 
         props.cluster.addManifest(mockedServerCertManifest)

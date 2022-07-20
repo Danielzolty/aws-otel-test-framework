@@ -10,6 +10,7 @@ export class SampleAppDeploymentConstruct extends Construct{
 
     constructor(scope: Construct, id: string, props: SampleAppDeploymentConstructProps){
          super(scope, id);
+
          if (props.sampleAppMode === 'Push'){
             const pushModeSampleAppDeploymentConstruct = new PushModeSampleAppDeploymentConstruct(this, 'push-mode-sample-app-construct', {
                 cluster: props.cluster,
@@ -29,6 +30,7 @@ export class SampleAppDeploymentConstruct extends Construct{
 
 export interface SampleAppDeploymentConstructProps {
     cluster: eks.ICluster
+    sampleAppImageURL: string
     sampleAppMode: string
     aocNamespaceConstruct: AOCNamespaceConstruct
 }

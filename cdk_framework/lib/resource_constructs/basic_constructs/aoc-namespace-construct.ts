@@ -7,15 +7,20 @@ export class AOCNamespaceConstruct extends Construct{
 
     constructor(scope: Construct, id: string, props: AOCNamespaceConstructProps){
         super(scope, id);
+        
+        // define the manifest
+        //TODO: This should be set to a true random value
+        const random_value = 1
         this.name = 'aoc-ns-' + random_value
         const aocNsManifest = {
+            apiVersion: 'v1',
             kind: 'Namespace',
             metadata: { 
-                //value at the end should be a unique test id (instead of "1")
                 name: this.name
             },
         }
-        
+
+        // add the manifest to the cluster
         props.cluster.addManifest('aoc-ns', aocNsManifest)
     }
 }
