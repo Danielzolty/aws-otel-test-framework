@@ -11,10 +11,11 @@ export class SampleAppDeploymentConstruct extends Construct{
     constructor(scope: Construct, id: string, props: SampleAppDeploymentConstructProps){
          super(scope, id);
 
-         if (props.sampleAppMode === 'Push'){
+         if (props.sampleAppMode === 'push'){
             const pushModeSampleAppDeploymentConstruct = new PushModeSampleAppDeploymentConstruct(this, 'push-mode-sample-app-construct', {
                 cluster: props.cluster,
-                aocNamespaceConstruct: props.aocNamespaceConstruct
+                aocNamespaceConstruct: props.aocNamespaceConstruct,
+                sampleAppImageURL: props.sampleAppImageURL
             })
             this.sampleAppLabelSelector = pushModeSampleAppDeploymentConstruct.sampleAppLabelSelector
          }

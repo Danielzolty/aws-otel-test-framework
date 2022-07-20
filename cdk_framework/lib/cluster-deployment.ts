@@ -10,49 +10,49 @@ const yaml = require('js-yaml')
 
 
 export function deployClusters(app: cdk.App) : Map<string, ClusterStack> {
-  // get the file
-  const clusterConfigRoute = process.env.CLUSTER_CONFIG_PATH
-  // if no cluster config path is provided, throw error
-  if (clusterConfigRoute == undefined){
-      throw new Error ('No path provided for cluster configuration')
-  }
-  // if cluster config path doesn't route to a yaml file, throw error
-  if (!/(.yml|.yaml)$/.test(clusterConfigRoute)){
-      throw new Error ('Path for cluster configuration must be to a yaml file')
-  }
-
-  // load the data from the file
-  const rawClusterConfig = readFileSync(clusterConfigRoute)
-  const clusterConfigData = yaml.load(rawClusterConfig)
-  validateClusterConfig(clusterConfigData)
-
-  // setup VPC
-  const REGION = process.env.REGION || 'us-west-2'  
-  const vs = new VPCStack(app, "EKSVpc", {
-    env: {
-      region: REGION
+    // get the file
+    const clusterConfigRoute = process.env.CLUSTER_CONFIG_PATH
+    // if no cluster config path is provided, throw error
+    if (clusterConfigRoute == undefined){
+        throw new Error ('No path provided for cluster configuration')
     }
-  })
+    // if cluster config path doesn't route to a yaml file, throw error
+    if (!/(.yml|.yaml)$/.test(clusterConfigRoute)){
+        throw new Error ('Path for cluster configuration must be to a yaml file')
+    }
 
-  // deploy clusters
-  const clusterStackMap = new Map<string, ClusterStack>()
-  for(const [key, value] of Object.entries(clusterConfigData['clusters'])){
-    const val = Object(value)
-    const versionKubernetes = eks.KubernetesVersion.of(String(val['version']));
-    const newStack = new ClusterStack(app, key + "Stack", {
-      launch_type: String(val['launch_type']),
-      name: key,
-      vpc: vs.vpc,
-      version: versionKubernetes,
-      cpu: String(val["cpu_architecture"]),
-      node_size: String(val["node_size"]),
-      env: {
-        region: REGION
-      },
+    // load the data from the file
+    const rawClusterConfig = readFileSync(clusterConfigRoute)
+    const clusterConfigData = yaml.load(rawClusterConfig)
+    validateClusterConfig(clusterConfigData)
+
+    // set up VPC
+    const REGION = process.env.REGION || 'us-west-2'
+    //TODO: Add "Stack" to the name  
+    const vs = new VPCStack(app, "EKSVpc", {
+        env: {
+            region: REGION
+        }
     })
-      
-    clusterStackMap.set(key, newStack)
-  }
 
-  return clusterStackMap
+    // deploy clusters
+    const clusterStackMap = new Map<string, ClusterStack>()
+    for(const [key, value] of Object.entries(clusterConfigData['clusters'])){
+        const val = Object(value)
+        const versionKubernetes = eks.KubernetesVersion.of(String(val['version']));
+        const newStack = new ClusterStack(app, key + "Stack", {
+            launch_type: String(val['launch_type']),
+            name: key,
+            vpc: vs.vpc,
+            version: versionKubernetes,
+            cpu: String(val["cpu_architecture"]),
+            node_size: String(val["node_size"]),
+            env: {
+                region: REGION
+            },
+        })
+        clusterStackMap.set(key, newStack)
+    }
+
+    return clusterStackMap
 }

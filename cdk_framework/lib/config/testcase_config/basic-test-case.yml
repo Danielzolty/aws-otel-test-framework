@@ -1,7 +1,7 @@
 ---
 testcase:
   clusterName: armCluster
-  sampleAppImageURL: http://dummy.url
+  sampleAppImageURL: "public.ecr.aws/aws-otel-test/aws-otel-java-spark:latest"
   sampleAppMode: push
   collectorConfig:
     receivers:

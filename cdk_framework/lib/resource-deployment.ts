@@ -1,12 +1,11 @@
 import 'source-map-support/register';
 import * as cdk from 'aws-cdk-lib';
-import { aws_eks as eks } from 'aws-cdk-lib';
 import { ClusterStack } from './stacks/cluster-stack';
 import { validateTestcaseConfig } from './utils/validate';
-import { AOCNamespaceConstruct } from './resource_constructs/basic_constructs/aoc-namespace-construct';
-import { ResourceDeploymentStack } from './stacks/resource-deployment-stack';
 import { readFileSync} from 'fs';
 const yaml = require('js-yaml')
+import { AOCNamespaceConstruct } from './resource_constructs/basic_constructs/aoc-namespace-construct';
+import { SampleAppDeploymentConstruct } from './resource_constructs/basic_constructs/sample-app-deployment-construct';
 
 
 export function deployResources(app: cdk.App, clusterStackMap: Map<string, ClusterStack>) {
@@ -45,13 +44,13 @@ export function deployResources(app: cdk.App, clusterStackMap: Map<string, Clust
         cluster: cluster
     })
 
-    // // add Sample App resource
-    // const sampleAppDeploymentConstruct = new SampleAppDeploymentConstruct(this, 'sample-app-deployment-construct', {
-    //     cluster : props.cluster,
-    //     sampleAppImageURL: props.sampleAppImageURL,
-    //     sampleAppMode: props.sampleAppMode,
-    //     aocNamespaceConstruct: aocNamespaceConstruct
-    // })
+    // add Sample App resource
+    const sampleAppDeploymentConstruct = new SampleAppDeploymentConstruct(clusterStack, 'sample-app-deployment-construct', {
+        cluster : cluster,
+        sampleAppImageURL: sampleAppImageURL,
+        sampleAppMode: sampleAppMode,
+        aocNamespaceConstruct: aocNamespaceConstruct
+    })
 
     // // add AOC Config Map resource
     // const aocConfigMapConstruct = new AOCConfigMapConstruct(this, 'aoc-config-map-construct', {
@@ -76,7 +75,7 @@ export function deployResources(app: cdk.App, clusterStackMap: Map<string, Clust
     // })
 
 
-    
+
 
     // new ResourceDeploymentStack(app, clusterName + 'Resources', {
     //     cluster: cluster,
