@@ -1,6 +1,5 @@
-import { aws_eks as eks} from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-
+import { ICluster } from 'aws-cdk-lib/aws-eks';
 
 export class ConfigMapConstruct extends Construct{
     constructor(scope: Construct, id: string, props: ConfigMapConstructProps){
@@ -24,5 +23,5 @@ export class ConfigMapConstruct extends Construct{
 }
 
 export interface ConfigMapConstructProps {
-    cluster: eks.ICluster;
+    cluster: ICluster;
 }

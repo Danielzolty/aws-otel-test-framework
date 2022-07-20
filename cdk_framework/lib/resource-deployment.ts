@@ -8,7 +8,7 @@ import { AOCNamespaceConstruct } from './resource_constructs/basic_constructs/ao
 import { SampleAppDeploymentConstruct } from './resource_constructs/basic_constructs/sample-app-deployment-construct';
 
 
-export function deployResources(app: cdk.App, clusterStackMap: Map<string, ClusterStack>) {
+export function deployResources(app: cdk.App, clusterStackMap: Map <string, ClusterStack>) {
     // load the file
     const testcaseConfigRoute = process.env.TESTCASE_CONFIG_PATH
     // if no testcase config path is provided, throw error
@@ -56,7 +56,7 @@ export function deployResources(app: cdk.App, clusterStackMap: Map<string, Clust
         aocNamespaceConstruct: aocNamespaceConstruct,
         region: region
     })
-    // Unfortunately it doesn't seem that this dependency is being inferred so need to add it explicitely
+    // It doesn't seem that this dependency is being inferred so need to add it explicitely
     sampleAppDeploymentConstruct.node.addDependency(aocNamespaceConstruct)
 
     // // add AOC Config Map resource

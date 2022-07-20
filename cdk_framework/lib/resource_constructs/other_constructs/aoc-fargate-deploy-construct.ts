@@ -1,6 +1,5 @@
-import { aws_eks as eks} from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-
+import { ICluster } from 'aws-cdk-lib/aws-eks';
 
 export class aocFargateDeployConstruct extends Construct{
     constructor(scope: Construct, id: string, props: aocFargateDeployConstructProps){
@@ -27,5 +26,5 @@ export class aocFargateDeployConstruct extends Construct{
 }
 
 export interface aocFargateDeployConstructProps {
-    cluster: eks.ICluster;
+    cluster: ICluster;
 }

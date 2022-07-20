@@ -1,5 +1,5 @@
-import { aws_eks as eks} from 'aws-cdk-lib';
 import { Construct } from 'constructs';
+import { ICluster } from 'aws-cdk-lib/aws-eks';
 
 
 export class DaemonSetConstruct extends Construct{
@@ -19,5 +19,5 @@ export class DaemonSetConstruct extends Construct{
 }
 
 export interface DaemonSetConstructProps {
-    cluster: eks.ICluster;
+    cluster: ICluster;
 }

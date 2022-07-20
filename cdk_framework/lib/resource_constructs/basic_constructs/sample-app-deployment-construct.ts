@@ -1,5 +1,5 @@
-import { aws_eks as eks} from 'aws-cdk-lib';
 import { Construct } from 'constructs';
+import { ICluster } from 'aws-cdk-lib/aws-eks';
 import { PushModeSampleAppDeploymentConstruct } from './push-mode-sample-app-construct';
 import { PullModeSampleAppDeploymentConstruct } from '../other_constructs/pull-mode-sample-app-construct';
 import { AOCNamespaceConstruct } from './aoc-namespace-construct';
@@ -31,7 +31,7 @@ export class SampleAppDeploymentConstruct extends Construct{
 }
 
 export interface SampleAppDeploymentConstructProps {
-    cluster: eks.ICluster
+    cluster: ICluster
     sampleAppImageURL: string
     sampleAppMode: string
     aocNamespaceConstruct: AOCNamespaceConstruct

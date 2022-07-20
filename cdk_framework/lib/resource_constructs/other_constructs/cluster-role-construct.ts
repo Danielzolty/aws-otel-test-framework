@@ -1,5 +1,5 @@
-import { aws_eks as eks} from 'aws-cdk-lib';
 import { Construct } from 'constructs';
+import { ICluster } from 'aws-cdk-lib/aws-eks';
 
 
 export class ClusterRoleConstruct extends Construct{
@@ -16,5 +16,5 @@ export class ClusterRoleConstruct extends Construct{
 }
 
 export interface ClusterRoleConstructProps {
-    cluster: eks.ICluster;
+    cluster: ICluster;
 }

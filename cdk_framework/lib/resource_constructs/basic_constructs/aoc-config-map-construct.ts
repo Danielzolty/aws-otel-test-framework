@@ -1,5 +1,5 @@
-import { aws_eks as eks} from 'aws-cdk-lib';
 import { Construct } from 'constructs';
+import { ICluster } from 'aws-cdk-lib/aws-eks';
 import { AOCNamespaceConstruct } from './aoc-namespace-construct';
 
 
@@ -29,7 +29,7 @@ export class AOCConfigMapConstruct extends Construct{
 }
 
 export interface AOCConfigMapConstructProps {
-    cluster: eks.ICluster
+    cluster: ICluster
     aocNamespaceConstruct: AOCNamespaceConstruct
     //What type should this be?
     aocConfig: Object

@@ -1,5 +1,5 @@
-import { aws_eks as eks} from 'aws-cdk-lib';
 import { Construct } from 'constructs';
+import { ICluster } from 'aws-cdk-lib/aws-eks';
 import { AOCConfigMapConstruct } from './aoc-config-map-construct';
 import { AOCNamespaceConstruct } from './aoc-namespace-construct';
 import { MockedServerCertConstruct } from './mocked-server-cert-construct';
@@ -131,7 +131,7 @@ export class AOCDeploymentConstruct extends Construct{
 }
 
 export interface AOCDeploymentConstructProps {
-    cluster: eks.ICluster
+    cluster: ICluster
     aocNamespaceConstruct: AOCNamespaceConstruct
     sampleAppDeploymentConstruct: SampleAppDeploymentConstruct
     aocConfigMapConstruct: AOCConfigMapConstruct

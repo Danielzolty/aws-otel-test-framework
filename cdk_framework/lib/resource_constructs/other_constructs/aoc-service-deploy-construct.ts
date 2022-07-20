@@ -1,5 +1,5 @@
-import { aws_eks as eks} from 'aws-cdk-lib';
 import { Construct } from 'constructs';
+import { ICluster } from 'aws-cdk-lib/aws-eks';
 
 
 export class aocServiceDeployConstruct extends Construct{
@@ -19,5 +19,5 @@ export class aocServiceDeployConstruct extends Construct{
 }
 
 export interface aocServiceDeployConstructProps {
-    cluster: eks.ICluster;
+    cluster: ICluster;
 }

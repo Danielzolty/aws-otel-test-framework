@@ -1,6 +1,5 @@
-import { aws_eks as eks} from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-
+import { ICluster } from 'aws-cdk-lib/aws-eks';
 
 export class AOCNamespaceConstruct extends Construct{
     name: string
@@ -26,5 +25,5 @@ export class AOCNamespaceConstruct extends Construct{
 }
 
 export interface AOCNamespaceConstructProps {
-    cluster: eks.ICluster;
+    cluster: ICluster;
 }

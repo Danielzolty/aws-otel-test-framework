@@ -1,6 +1,5 @@
-import { aws_eks as eks} from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-
+import { ICluster } from 'aws-cdk-lib/aws-eks';
 
 export class aocFargateNSConstruct extends Construct{
     name : string
@@ -21,5 +20,5 @@ export class aocFargateNSConstruct extends Construct{
 }
 
 export interface aocFargateNSConstructProps {
-    cluster: eks.ICluster;
+    cluster: ICluster;
 }

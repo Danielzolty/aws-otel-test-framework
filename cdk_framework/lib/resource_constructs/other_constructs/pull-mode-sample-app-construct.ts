@@ -1,5 +1,5 @@
-import { aws_eks as eks} from 'aws-cdk-lib';
 import { Construct } from 'constructs';
+import { ICluster } from 'aws-cdk-lib/aws-eks';
 import { AOCNamespaceConstruct } from '../basic_constructs/aoc-namespace-construct';
 
 
@@ -86,6 +86,6 @@ export class PullModeSampleAppDeploymentConstruct extends Construct {
 }
 
 export interface PullModeSampleAppDeploymentConstructProps {
-      cluster: eks.ICluster
+      cluster: ICluster
       aocNamespaceConstruct: AOCNamespaceConstruct
 }

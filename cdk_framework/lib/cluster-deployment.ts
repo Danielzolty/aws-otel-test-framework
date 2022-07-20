@@ -9,7 +9,7 @@ import { readFileSync} from 'fs';
 const yaml = require('js-yaml')
 
 
-export function deployClusters(app: cdk.App) : Map<string, ClusterStack> {
+export function deployClusters(app: cdk.App) : Map <string, ClusterStack> {
     // get the file
     const clusterConfigRoute = process.env.CLUSTER_CONFIG_PATH
     // if no cluster config path is provided, throw error
@@ -26,7 +26,7 @@ export function deployClusters(app: cdk.App) : Map<string, ClusterStack> {
     const clusterConfigData = yaml.load(rawClusterConfig)
     validateClusterConfig(clusterConfigData)
 
-    // set up VPC
+    // set up VPC to be used by all EKS clusters
     const region = process.env.REGION
     if (region == undefined){
         throw new Error ('Region environment variable not set')
@@ -38,15 +38,15 @@ export function deployClusters(app: cdk.App) : Map<string, ClusterStack> {
     })
 
     // deploy clusters
-    const clusterStackMap = new Map<string, ClusterStack>()
+    const clusterStackMap = new Map <string, ClusterStack>()
     for(const [key, value] of Object.entries(clusterConfigData['clusters'])){
         const val = Object(value)
-        const versionKubernetes = eks.KubernetesVersion.of(String(val['version']));
+        const kubernetesVersion = eks.KubernetesVersion.of(String(val['version']));
         const newStack = new ClusterStack(app, `${key}-stack`, {
             launch_type: String(val['launch_type']),
             name: key,
             vpc: vs.vpc,
-            version: versionKubernetes,
+            version: kubernetesVersion,
             cpu: String(val['cpu_architecture']),
             node_size: String(val['node_size']),
             env: {

@@ -55,7 +55,7 @@ export class ClusterStack extends Stack {
   }
 }
 
-export interface ClusterStackProps extends StackProps{
+export interface ClusterStackProps extends StackProps {
     launch_type: string;
     name: string;
     vpc: Vpc;

@@ -1,5 +1,5 @@
-import { aws_eks as eks} from 'aws-cdk-lib';
 import { Construct } from 'constructs';
+import { ICluster } from 'aws-cdk-lib/aws-eks';
 
 
 export class LogsSampleFargateDeployConstruct extends Construct{
@@ -21,5 +21,5 @@ export class LogsSampleFargateDeployConstruct extends Construct{
 }
 
 export interface LogsSampleFargateDeployConstructProps {
-    cluster: eks.ICluster;
+    cluster: ICluster;
 }
