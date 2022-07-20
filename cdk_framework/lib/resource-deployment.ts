@@ -45,12 +45,18 @@ export function deployResources(app: cdk.App, clusterStackMap: Map<string, Clust
     })
 
     // add Sample App resource
+    const region = process.env.REGION
+    if (region == undefined){
+        throw new Error ('Resource environment variable not set')
+    }
     const sampleAppDeploymentConstruct = new SampleAppDeploymentConstruct(clusterStack, 'sample-app-deployment-construct', {
         cluster : cluster,
         sampleAppImageURL: sampleAppImageURL,
         sampleAppMode: sampleAppMode,
-        aocNamespaceConstruct: aocNamespaceConstruct
+        aocNamespaceConstruct: aocNamespaceConstruct,
+        region: region
     })
+    sampleAppDeploymentConstruct.node.addDependency(aocNamespaceConstruct)
 
     // // add AOC Config Map resource
     // const aocConfigMapConstruct = new AOCConfigMapConstruct(this, 'aoc-config-map-construct', {

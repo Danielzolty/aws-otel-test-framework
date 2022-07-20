@@ -27,14 +27,14 @@ export function deployClusters(app: cdk.App) : Map<string, ClusterStack> {
     validateClusterConfig(clusterConfigData)
 
     // set up VPC
-    const REGION = process.env.REGION
-    if (REGION == undefined){
-        throw new Error ('No region provided')
+    const region = process.env.REGION
+    if (region == undefined){
+        throw new Error ('Resource environment variable not set')
     }
     //TODO: Add "Stack" to the name  
-    const vs = new VPCStack(app, "EKSVpc", {
+    const vs = new VPCStack(app, "EKSVpcStack", {
         env: {
-            region: REGION
+            region: region
         }
     })
 
@@ -51,7 +51,7 @@ export function deployClusters(app: cdk.App) : Map<string, ClusterStack> {
             cpu: String(val["cpu_architecture"]),
             node_size: String(val["node_size"]),
             env: {
-                region: REGION
+                region: region
             },
         })
         clusterStackMap.set(key, newStack)

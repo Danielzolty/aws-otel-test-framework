@@ -11,12 +11,14 @@ export class PushModeSampleAppDeploymentConstruct extends Construct {
 
       this.sampleAppLabelSelector = "sample-app"
 
+      // configs
       // Using hard-coded values ultimately from push_mode_samples.tf and output.tf (assuming not adot operator)
       const grpcPort = 4317
       const udpPort = 55690
       const listenAddressPort = 4567
       const httpPort = 9411
-      const pushModeAppManifest = {
+
+      const pushModeSampleAppManifest = {
          apiVersion: 'apps/v1',
          kind: "Deployment",
          
@@ -69,49 +71,41 @@ export class PushModeSampleAppDeploymentConstruct extends Construct {
                            {
                               name: "COLLECTOR_UDP_ADDRESS",
                               // value: "${kubernetes_service.aoc_udp_service[0].metadata[0].name}:${var.aoc_service.udp_port}"
-                              // Using hard-coded values ultimately from push_mode_samples.tf and output.tf (assuming not adot operator)
                               value: `aoc-udp:${udpPort}`
                            },
                            {
                               name: "AWS_XRAY_DAEMON_ADDRESS",
                               //value: "${kubernetes_service.aoc_udp_service[0].metadata[0].name}:${var.aoc_service.udp_port}"
-                              // Using hard-coded values ultimately from push_mode_samples.tf and output.tf
                               value: `aoc-udp:${udpPort}`
                            },
                            {
                               name: "AWS_REGION",
                               //value: var.region
-                              //Using a hard-coded region
-                              value: "us-west-2"
+                              value: props.region
                            },
                            {
                               name: "INSTANCE_ID",
                               // value: var.testing_id
-                              // hard-coded, need to use a random ID generator (search random_id to see how terraform does it)
                               value: "1"
                            },
                            {
                               name: "OTEL_RESOURCE_ATTRIBUTES",
                               // value: "service.namespace=${var.sample_app.metric_namespace},service.name=${var.aoc_service.name}"
-                              // hard-coded ultimately from variables.tf
                               value: "service.namespace=aws-otel,service.name=aws-otel-integ-test"
                            },
                            {
                               name: "LISTEN_ADDRESS",
                               //value: "${var.sample_app.listen_address_ip}:${var.sample_app.listen_address_port}"
-                              //Using a hard-coded address and port ultimately from outputs.tf
                               value: `0.0.0.0:${listenAddressPort}`
                            },
                            {
                               name: "JAEGER_RECEIVER_ENDPOINT",
                               // value: "${kubernetes_service.aoc_tcp_service[0].metadata[0].name}:${var.aoc_service.http_port}"
-                              // Using hard-coded values ultimately from push_mode_samples.tf and output.tf
                               value: `aoc-tcp:${httpPort}`
                            },
                            {
                               name: "ZIPKIN_RECEIVER_ENDPOINT",
                               // value: "${kubernetes_service.aoc_tcp_service[0].metadata[0].name}:${var.aoc_service.http_port}"
-                              // Using hard-coded values ultimately from push_mode_samples.tf and output.tf
                               value: `aoc-tcp:${httpPort}`
                            },
                            {
@@ -143,7 +137,7 @@ export class PushModeSampleAppDeploymentConstruct extends Construct {
          }
       }
       
-      props.cluster.addManifest('push-mode-sample-app', pushModeAppManifest)
+      props.cluster.addManifest('push-mode-sample-app', pushModeSampleAppManifest)
    }
 }
 
@@ -151,4 +145,5 @@ export interface PushModeSampleAppDeploymentConstructProps {
       cluster: eks.ICluster;
       aocNamespaceConstruct: AOCNamespaceConstruct
       sampleAppImageURL: string
+      region: string
 }
