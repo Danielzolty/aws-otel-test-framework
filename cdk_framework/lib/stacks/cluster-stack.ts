@@ -25,7 +25,7 @@ export class ClusterStack extends Stack {
                 vpc: props.vpc,
                 defaultCapacity: 0,  // we want to manage capacity our selves
                 version: props.version,
-                clusterLogging: logging
+                clusterLogging: logging,
             });
             if (props.cpu === 'arm_64'){
                 this.cluster.addNodegroupCapacity('ng-arm', {
@@ -39,7 +39,6 @@ export class ClusterStack extends Stack {
                 })
             }
         } else if(props.launch_type === 'fargate'){
-            console.log('Fargate starting')
             this.cluster = new eks.FargateCluster(this, props.name, {
                 clusterName: props.name,
                 vpc: props.vpc,

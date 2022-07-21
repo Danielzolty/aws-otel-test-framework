@@ -7,6 +7,7 @@ const yaml = require('js-yaml')
 import { AOCNamespaceConstruct } from './resource_constructs/basic_constructs/aoc-namespace-construct';
 import { SampleAppDeploymentConstruct } from './resource_constructs/basic_constructs/sample-app-deployment-construct';
 import { AOCConfigMapConstruct } from './resource_constructs/basic_constructs/aoc-config-map-construct';
+import { AOCDeploymentConstruct } from './resource_constructs/basic_constructs/aoc-deployment-construct';
 
 
 export function deployResources(app: cdk.App, clusterStackMap: Map <string, ClusterStack>) {
@@ -45,27 +46,27 @@ export function deployResources(app: cdk.App, clusterStackMap: Map <string, Clus
         cluster: cluster
     })
 
-    // // add Sample App resource
-    // const region = process.env.REGION
-    // if (region == undefined) {
-    //     throw new Error ('Region environment variable not set')
-    // }
-    // const sampleAppDeploymentConstruct = new SampleAppDeploymentConstruct(clusterStack, 'sample-app-deployment-construct', {
-    //     cluster : cluster,
-    //     sampleAppImageURL: sampleAppImageURL,
-    //     sampleAppMode: sampleAppMode,
-    //     aocNamespaceConstruct: aocNamespaceConstruct,
-    //     region: region
-    // })
-    // // it doesn't seem that this dependency is being inferred so need to add it explicitely
-    // sampleAppDeploymentConstruct.node.addDependency(aocNamespaceConstruct)
+    // add Sample App resource
+    const region = process.env.REGION
+    if (region == undefined) {
+        throw new Error ('Region environment variable not set')
+    }
+    const sampleAppDeploymentConstruct = new SampleAppDeploymentConstruct(clusterStack, 'sample-app-deployment-construct', {
+        cluster : cluster,
+        sampleAppImageURL: sampleAppImageURL,
+        sampleAppMode: sampleAppMode,
+        aocNamespaceConstruct: aocNamespaceConstruct,
+        region: region
+    })
+    // it doesn't seem that this dependency is being inferred so need to add it explicitely
+    sampleAppDeploymentConstruct.node.addDependency(aocNamespaceConstruct)
 
-    // // add AOC Config Map resource
-    // const aocConfigMapConstruct = new AOCConfigMapConstruct(clusterStack, 'aoc-config-map-construct', {
-    //     cluster : cluster,
-    //     aocNamespaceConstruct : aocNamespaceConstruct,
-    //     aocConfig : collectorConfig
-    // })
+    // add AOC Config Map resource
+    const aocConfigMapConstruct = new AOCConfigMapConstruct(clusterStack, 'aoc-config-map-construct', {
+        cluster : cluster,
+        aocNamespaceConstruct : aocNamespaceConstruct,
+        aocConfig : collectorConfig
+    })
 
     // // add MockedServerCert resource
     // const mockedServerCertConstruct = new MockedServerCertConstruct(this, 'mocked-server-cert', {
@@ -73,14 +74,14 @@ export function deployResources(app: cdk.App, clusterStackMap: Map <string, Clus
     //     aocNamespaceConstruct: aocConfigMapConstruct
     // })
 
-    // // add AOCDeployment resource
-    // const aocDeploymentConstruct = new AOCDeploymentConstruct(this, 'aoc-deployment-construct', {
-    //     cluster: props.cluster,
-    //     aocNamespaceConstruct: aocNamespaceConstruct,
-    //     sampleAppDeploymentConstruct: sampleAppDeploymentConstruct,
-    //     aocConfigMapConstruct: aocConfigMapConstruct,
-    //     mockedServerCertConstruct: mockedServerCertConstruct
-    // })
+    // add AOCDeployment resource
+    const aocDeploymentConstruct = new AOCDeploymentConstruct(clusterStack, 'aoc-deployment-construct', {
+        cluster: cluster,
+        aocNamespaceConstruct: aocNamespaceConstruct,
+        sampleAppDeploymentConstruct: sampleAppDeploymentConstruct,
+        aocConfigMapConstruct: aocConfigMapConstruct
+        // mockedServerCertConstruct: mockedServerCertConstruct
+    })
 
 
 

@@ -5,11 +5,14 @@ import { AOCNamespaceConstruct } from './aoc-namespace-construct';
 
 export class AOCConfigMapConstruct extends Construct{
         name : string
+        aocConfigPath: string
 
         constructor(scope: Construct, id: string, props: AOCConfigMapConstructProps) {
             super(scope, id);
 
             this.name = 'otel-config'
+            //TODO: THIS MUST BE SET TO THE SAME KEY IN DATA. FIGURE OUT HOW TO LINK
+            this.aocConfigPath = 'aoc-config.yml'
             const aocConfigMapManifest = {
                     apiVersion: 'v1',
                     kind: 'ConfigMap',

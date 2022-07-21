@@ -8,8 +8,10 @@ import { SampleAppDeploymentConstruct } from './sample-app-deployment-construct'
 export class AOCDeploymentConstruct extends Construct{
     constructor(scope: Construct, id: string, props: AOCDeploymentConstructProps) {
         super(scope, id);
-        const aocManifest = {
-            apiVersion: 'v1',
+
+        const aocConfigMountPath = '/aoc'
+        const aocDeploymentManifest = {
+            apiVersion: 'apps/v1',
             kind: 'Deployment',
 
             metadata: {
@@ -94,7 +96,7 @@ export class AOCDeploymentConstruct extends Construct{
                                 image: 'public.ecr.aws/aws-otel-test/adot-collector-integration-test:latest',
                                 imagePullPolicy: 'Always',
                                 args: [
-                                '--config=/aoc/aoc-config.yml'],
+                                `--config=${aocConfigMountPath}/${props.aocConfigMapConstruct.aocConfigPath}`],
                         
                                 resources: {
                                     limits: {
@@ -105,7 +107,7 @@ export class AOCDeploymentConstruct extends Construct{
 
                                 volumeMounts: [
                                     {
-                                        mountPath: '/aoc',
+                                        mountPath: aocConfigMountPath,
                                         name: props.aocConfigMapConstruct.name
                                     }
                                     // {
@@ -122,7 +124,7 @@ export class AOCDeploymentConstruct extends Construct{
             //dependsOn: [aws_eks_fargate_profile.test_profile]
         }
         
-        props.cluster.addManifest('aoc', aocManifest)
+        props.cluster.addManifest('aoc-deployment', aocDeploymentManifest)
     }
 }
 
@@ -131,5 +133,5 @@ export interface AOCDeploymentConstructProps {
     aocNamespaceConstruct: AOCNamespaceConstruct
     sampleAppDeploymentConstruct: SampleAppDeploymentConstruct
     aocConfigMapConstruct: AOCConfigMapConstruct
-    mockedServerCertConstruct: MockedServerCertConstruct
+    // mockedServerCertConstruct: MockedServerCertConstruct
 }

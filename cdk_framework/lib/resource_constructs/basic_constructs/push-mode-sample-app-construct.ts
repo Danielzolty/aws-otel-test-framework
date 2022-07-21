@@ -18,7 +18,7 @@ export class PushModeSampleAppDeploymentConstruct extends Construct {
         const listenAddressPort = 4567
         const httpPort = 9411
 
-        const pushModeSampleAppManifest = {
+        const pushModeSampleAppDeploymentManifest = {
             apiVersion: 'apps/v1',
             kind: 'Deployment',
          
@@ -137,7 +137,7 @@ export class PushModeSampleAppDeploymentConstruct extends Construct {
             }
         }
       
-        props.cluster.addManifest('push-mode-sample-app', pushModeSampleAppManifest)
+        props.cluster.addManifest('push-mode-sample-app-deployment', pushModeSampleAppDeploymentManifest)
     }
 }
 
