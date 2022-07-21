@@ -6,6 +6,7 @@ import { readFileSync} from 'fs';
 const yaml = require('js-yaml')
 import { AOCNamespaceConstruct } from './resource_constructs/basic_constructs/aoc-namespace-construct';
 import { SampleAppDeploymentConstruct } from './resource_constructs/basic_constructs/sample-app-deployment-construct';
+import { AOCConfigMapConstruct } from './resource_constructs/basic_constructs/aoc-config-map-construct';
 
 
 export function deployResources(app: cdk.App, clusterStackMap: Map <string, ClusterStack>) {
@@ -59,12 +60,12 @@ export function deployResources(app: cdk.App, clusterStackMap: Map <string, Clus
     // it doesn't seem that this dependency is being inferred so need to add it explicitely
     sampleAppDeploymentConstruct.node.addDependency(aocNamespaceConstruct)
 
-    // // add AOC Config Map resource
-    // const aocConfigMapConstruct = new AOCConfigMapConstruct(this, 'aoc-config-map-construct', {
-    //     cluster : props.cluster,
-    //     aocNamespaceConstruct : aocNamespaceConstruct,
-    //     aocConfig : props.aocConfig
-    // })
+    // add AOC Config Map resource
+    const aocConfigMapConstruct = new AOCConfigMapConstruct(clusterStack, 'aoc-config-map-construct', {
+        cluster : cluster,
+        aocNamespaceConstruct : aocNamespaceConstruct,
+        aocConfig : collectorConfig
+    })
 
     // // add MockedServerCert resource
     // const mockedServerCertConstruct = new MockedServerCertConstruct(this, 'mocked-server-cert', {

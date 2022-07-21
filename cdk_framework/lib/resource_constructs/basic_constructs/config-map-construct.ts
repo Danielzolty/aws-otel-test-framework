@@ -16,7 +16,7 @@ export class ConfigMapConstruct extends Construct{
                                                                      )
                                                         : data.template_file.config_map_file[count.index].rendered,
             
-                                                        dependsOn: [aws_eks_fargate_profile.test_profile]
+            // dependsOn: [aws_eks_fargate_profile.test_profile]
         }
         props.cluster.addManifest('config-map', configMapManifest)
     }

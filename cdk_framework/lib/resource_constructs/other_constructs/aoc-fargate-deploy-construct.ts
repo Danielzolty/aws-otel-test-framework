@@ -21,7 +21,7 @@ export class aocFargateDeployConstruct extends Construct{
             ]
         }
 
-        props.cluster.addManifest('aoc-fargate-deploy', aocServiceDeployManifest)
+        props.cluster.addManifest('aoc-fargate-deploy', aocFargateDeployManifest)
     }
 }
 
