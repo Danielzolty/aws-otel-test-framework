@@ -6,7 +6,7 @@ import { AOCNamespaceConstruct } from './aoc-namespace-construct';
 export class AOCConfigMapConstruct extends Construct{
     name : string
 
-    constructor(scope: Construct, id: string, props: AOCConfigMapConstructProps){
+    constructor(scope: Construct, id: string, props: AOCConfigMapConstructProps) {
         super(scope, id);
 
         this.name = 'otel-config'

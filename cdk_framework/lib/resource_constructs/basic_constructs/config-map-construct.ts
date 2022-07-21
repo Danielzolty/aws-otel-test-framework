@@ -2,7 +2,7 @@ import { Construct } from 'constructs';
 import { ICluster } from 'aws-cdk-lib/aws-eks';
 
 export class ConfigMapConstruct extends Construct{
-    constructor(scope: Construct, id: string, props: ConfigMapConstructProps){
+    constructor(scope: Construct, id: string, props: ConfigMapConstructProps) {
         super(scope, id);
         const configMapManifest = {
             apiVersion: 'v1',

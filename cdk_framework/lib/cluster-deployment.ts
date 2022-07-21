@@ -28,7 +28,7 @@ export function deployClusters(app: cdk.App) : Map <string, ClusterStack> {
 
     // set up VPC to be used by all EKS clusters
     const region = process.env.REGION
-    if (region == undefined){
+    if (region == undefined) {
         throw new Error ('Region environment variable not set')
     }
     const vs = new VPCStack(app, 'EKS-VPC-stack', {
@@ -39,7 +39,7 @@ export function deployClusters(app: cdk.App) : Map <string, ClusterStack> {
 
     // deploy clusters
     const clusterStackMap = new Map <string, ClusterStack>()
-    for(const [key, value] of Object.entries(clusterConfigData['clusters'])){
+    for(const [key, value] of Object.entries(clusterConfigData['clusters'])) {
         const val = Object(value)
         const kubernetesVersion = eks.KubernetesVersion.of(String(val['version']));
         const newStack = new ClusterStack(app, `${key}-stack`, {

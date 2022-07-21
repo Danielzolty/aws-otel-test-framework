@@ -46,7 +46,7 @@ export function deployResources(app: cdk.App, clusterStackMap: Map <string, Clus
 
     // add Sample App resource
     const region = process.env.REGION
-    if (region == undefined){
+    if (region == undefined) {
         throw new Error ('Region environment variable not set')
     }
     const sampleAppDeploymentConstruct = new SampleAppDeploymentConstruct(clusterStack, 'sample-app-deployment-construct', {
@@ -56,7 +56,7 @@ export function deployResources(app: cdk.App, clusterStackMap: Map <string, Clus
         aocNamespaceConstruct: aocNamespaceConstruct,
         region: region
     })
-    // It doesn't seem that this dependency is being inferred so need to add it explicitely
+    // it doesn't seem that this dependency is being inferred so need to add it explicitely
     sampleAppDeploymentConstruct.node.addDependency(aocNamespaceConstruct)
 
     // // add AOC Config Map resource
@@ -80,7 +80,6 @@ export function deployResources(app: cdk.App, clusterStackMap: Map <string, Clus
     //     aocConfigMapConstruct: aocConfigMapConstruct,
     //     mockedServerCertConstruct: mockedServerCertConstruct
     // })
-
 
 
 

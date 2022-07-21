@@ -6,7 +6,7 @@ import { MockedServerCertConstruct } from './mocked-server-cert-construct';
 import { SampleAppDeploymentConstruct } from './sample-app-deployment-construct';
 
 export class AOCDeploymentConstruct extends Construct{
-    constructor(scope: Construct, id: string, props: AOCDeploymentConstructProps){
+    constructor(scope: Construct, id: string, props: AOCDeploymentConstructProps) {
         super(scope, id);
         const aocManifest = {
             apiVersion: 'v1',
