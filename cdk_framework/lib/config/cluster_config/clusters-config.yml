@@ -1,8 +1,8 @@
 ---
 clusters:
-  armCluster:
+  amdCluster:
     launch_type: ec2
-    cpu_architecture: arm_64
+    cpu_architecture: amd_64
     version: 1.21
     node_size: large
   # amdCluster0:

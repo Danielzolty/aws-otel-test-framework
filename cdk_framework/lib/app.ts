@@ -6,11 +6,10 @@ const yaml = require('js-yaml')
 
 const app = new cdk.App();
 
-// Cluster Deployment
+// cluster deployment
 const clusterStackMap = deployClusters(app)
 
-
-// Resource Deployment
+// resource deployment
 if(process.env.CDK_EKS_RESOURCE_DEPLOY == 'true') {
     deployResources(app, clusterStackMap)
 }

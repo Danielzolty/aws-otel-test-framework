@@ -15,7 +15,6 @@ export class AOCDeploymentConstruct extends Construct{
             metadata: {
                 name: 'aoc',
                 //namespace: var.deployment_type == 'fargate' ? tolist(aws_eks_fargate_profile.test_profile[count.index].selector)[0].namespace : kubernetes_namespace.aoc_ns.metadata[0].name,
-                //Using a hard-coded NS
                 namespace: props.aocNamespaceConstruct.name,
                 labels: {
                     app: 'aoc'
@@ -28,7 +27,6 @@ export class AOCDeploymentConstruct extends Construct{
                 selector: {
                     matchLabels: {
                         // app: local.sample_app_label_selector
-                        //Using a hard-coded label from push_mode_samples.tf
                         app: props.sampleAppDeploymentConstruct.sampleAppLabelSelector
                     }
                 },
@@ -37,7 +35,6 @@ export class AOCDeploymentConstruct extends Construct{
                     metadata: {
                         labels: {
                             // app: local.sample_app_label_selector
-                            //Using a hard-coded label uÍﬁltimately from push_mode_samples.tf
                             app: props.sampleAppDeploymentConstruct.sampleAppLabelSelector
                         }
                     },
@@ -61,34 +58,35 @@ export class AOCDeploymentConstruct extends Construct{
                                 }
                             },
 
-                            {
-                                // in the old framework the name was hardcoded to otel-config (as well as below in the volumeMounts)
-                                // and only the name in the config map accessed a variable which ended up being the same name
-                                // I think it's simpler to just set both to the variable
-                                name: props.mockedServerCertConstruct.name,
-                                configMap: {
-                                    // name: kubernetes_config_map.mocked_server_cert.0.metadata[0].name
-                                    //Using a hard-coded name ultimately from otlp.tf
-                                    name: props.mockedServerCertConstruct.name
-                                }
-                            }
+                            // {
+                            //     // in the old framework the name was hardcoded to otel-config (as well as below in the volumeMounts)
+                            //     // and only the name in the config map accessed a variable which ended up being the same name
+                            //     // I think it's simpler to just set both to the variable
+                            //     name: props.mockedServerCertConstruct.name,
+                            //     configMap: {
+                            //         // name: kubernetes_config_map.mocked_server_cert.0.metadata[0].name
+                            //         //Using a hard-coded name ultimately from otlp.tf
+                            //         name: props.mockedServerCertConstruct.name
+                            //     }
+                            // }
                         ],
 
                         containers: [
-                            {
-                                name: 'mocked-server',
-                                image: local.mocked_server_image,
-                                imagePullPolicy: 'Always',
+                            // {
+                            //     name: 'mocked-server',
+                            //     image: local.mocked_server_image,
+                            //     image: "${data.aws_ecr_repository.mocked_servers.repository_url}:${var.mocked_server}-latest",
+                            //     imagePullPolicy: 'Always',
                         
-                                readinessProbe: {
-                                    httpGet: {
-                                        path: '/',
-                                        port: 8080
-                                    },
-                                    initialDelaySeconds: 10,
-                                    periodSeconds: 5
-                                }
-                            },
+                            //     readinessProbe: {
+                            //         httpGet: {
+                            //             path: '/',
+                            //             port: 8080
+                            //         },
+                            //         initialDelaySeconds: 10,
+                            //         periodSeconds: 5
+                            //     }
+                            // },
                             {
                                 name: 'aoc',
                                 //image: module.common.aoc_image,
@@ -97,8 +95,6 @@ export class AOCDeploymentConstruct extends Construct{
                                 imagePullPolicy: 'Always',
                                 args: [
                                 '--config=/aoc/aoc-config.yml'],
-                                // this config will be passed in as a prop
-                                args:[],
                         
                                 resources: {
                                     limits: {
@@ -111,11 +107,11 @@ export class AOCDeploymentConstruct extends Construct{
                                     {
                                         mountPath: '/aoc',
                                         name: props.aocConfigMapConstruct.name
-                                    },
-                                    {
-                                        mountPath: '/etc/pki/tls/certs',
-                                        name: props.mockedServerCertConstruct.name
                                     }
+                                    // {
+                                    //     mountPath: '/etc/pki/tls/certs',
+                                    //     name: props.mockedServerCertConstruct.name
+                                    // }
                                 ]
                             }
                         ]

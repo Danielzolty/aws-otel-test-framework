@@ -127,8 +127,8 @@ export class PushModeSampleAppDeploymentConstruct extends Construct {
                                         //port: var.sample_app.listen_address_port
                                         port: listenAddressPort
                                     },
-                                initialDelaySeconds: 10,
-                                periodSeconds: 5
+                                    initialDelaySeconds: 10,
+                                    periodSeconds: 5
                                 }
                             }
                         ]
