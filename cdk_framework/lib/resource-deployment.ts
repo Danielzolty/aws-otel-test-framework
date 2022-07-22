@@ -58,8 +58,8 @@ export function deployResources(app: cdk.App, clusterStackMap: Map <string, Clus
         aocNamespaceConstruct: aocNamespaceConstruct,
         region: region
     })
-    // it doesn't seem that this dependency is being inferred so need to add it explicitely
-    sampleAppDeploymentConstruct.node.addDependency(aocNamespaceConstruct)
+    // TODO: it doesn't seem that this dependency is being inferred so need to add it explicitely
+    sampleAppDeploymentConstruct.sampleAppDeployment.node.addDependency(aocNamespaceConstruct.aocNamespace)
 
     // // add AOC Config Map resource
     // const aocConfigMapConstruct = new AOCConfigMapConstruct(clusterStack, 'aoc-config-map-construct', {

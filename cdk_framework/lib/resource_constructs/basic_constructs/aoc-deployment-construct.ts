@@ -5,7 +5,9 @@ import { AOCNamespaceConstruct } from './aoc-namespace-construct';
 import { MockedServerCertConstruct } from './mocked-server-cert-construct';
 import { SampleAppDeploymentConstruct } from './sample-app-deployment-construct';
 
-export class AOCDeploymentConstruct extends Construct{
+export class AOCDeploymentConstruct extends Construct {
+    aocDeployment: Construct
+
     constructor(scope: Construct, id: string, props: AOCDeploymentConstructProps) {
         super(scope, id);
 
@@ -124,7 +126,7 @@ export class AOCDeploymentConstruct extends Construct{
             //dependsOn: [aws_eks_fargate_profile.test_profile]
         }
         
-        props.cluster.addManifest('aoc-deployment', aocDeploymentManifest)
+        this.aocDeployment = props.cluster.addManifest('aoc-deployment', aocDeploymentManifest)
     }
 }
 

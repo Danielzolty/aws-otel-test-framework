@@ -3,9 +3,10 @@ import { ICluster } from 'aws-cdk-lib/aws-eks';
 import { AOCNamespaceConstruct } from './aoc-namespace-construct';
 
 
-export class AOCConfigMapConstruct extends Construct{
-        name : string
+export class AOCConfigMapConstruct extends Construct {
+        name: string
         aocConfigPath: string
+        aocConfigMap: Construct
 
         constructor(scope: Construct, id: string, props: AOCConfigMapConstructProps) {
             super(scope, id);
@@ -29,7 +30,7 @@ export class AOCConfigMapConstruct extends Construct{
                 // depends_on: [aws_eks_fargate_profile.test_profile]
             }
             
-            props.cluster.addManifest('aoc-config-map', aocConfigMapManifest)
+            this.aocConfigMap = props.cluster.addManifest('aoc-config-map', aocConfigMapManifest)
         }
 
         // convertToYAMLString(map: Object) {

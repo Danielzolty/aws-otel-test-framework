@@ -4,7 +4,8 @@ import { AOCNamespaceConstruct } from './aoc-namespace-construct';
 
 
 export class PushModeSampleAppDeploymentConstruct extends Construct {
-   sampleAppLabelSelector : string
+   sampleAppLabelSelector: string
+   pushModeSampleAppDeployment: Construct
 
    constructor(scope: Construct, id: string, props: PushModeSampleAppDeploymentConstructProps) {
         super(scope, id);
@@ -137,7 +138,7 @@ export class PushModeSampleAppDeploymentConstruct extends Construct {
             }
         }
       
-        props.cluster.addManifest('push-mode-sample-app-deployment', pushModeSampleAppDeploymentManifest)
+        this.pushModeSampleAppDeployment = props.cluster.addManifest('push-mode-sample-app-deployment', pushModeSampleAppDeploymentManifest)
     }
 }
 

@@ -5,8 +5,9 @@ import { PullModeSampleAppDeploymentConstruct } from '../other_constructs/pull-m
 import { AOCNamespaceConstruct } from './aoc-namespace-construct';
 
 
-export class SampleAppDeploymentConstruct extends Construct{
+export class SampleAppDeploymentConstruct extends Construct {
     sampleAppLabelSelector: string
+    sampleAppDeployment: Construct
 
     constructor(scope: Construct, id: string, props: SampleAppDeploymentConstructProps){
          super(scope, id);
@@ -19,6 +20,7 @@ export class SampleAppDeploymentConstruct extends Construct{
                 region: props.region
             })
             this.sampleAppLabelSelector = pushModeSampleAppDeploymentConstruct.sampleAppLabelSelector
+            this.sampleAppDeployment = pushModeSampleAppDeploymentConstruct.pushModeSampleAppDeployment
          }
         //  else if (props.sampleAppMode === 'pull'){
         //     const pullModeSampleAppDeploymentConstruct = new PullModeSampleAppDeploymentConstruct(this, 'push-mode-sample-app-construct', {
@@ -26,6 +28,7 @@ export class SampleAppDeploymentConstruct extends Construct{
         //        aocNamespaceConstruct: props.aocNamespaceConstruct
         //     })
         //    this.sampleAppLabelSelector = pullModeSampleAppDeploymentConstruct.sampleAppLabelSelector
+        //    this.sampleAppDeployment = pullModeSampleAppDeploymentConstruct.pullModeSampleAppDeployment
         //  }
     }
 }

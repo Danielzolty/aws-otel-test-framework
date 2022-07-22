@@ -1,8 +1,9 @@
 import { Construct } from 'constructs';
 import { ICluster } from 'aws-cdk-lib/aws-eks';
 
-export class AOCNamespaceConstruct extends Construct{
+export class AOCNamespaceConstruct extends Construct {
     name: string
+    aocNamespace: Construct
 
     constructor(scope: Construct, id: string, props: AOCNamespaceConstructProps){
         super(scope, id);
@@ -20,7 +21,7 @@ export class AOCNamespaceConstruct extends Construct{
         }
 
         // add the manifest to the cluster
-        props.cluster.addManifest('aoc-namespace', aocNsManifest)
+        this.aocNamespace = props.cluster.addManifest('aoc-namespace', aocNsManifest)
     }
 }
 

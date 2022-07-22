@@ -3,8 +3,9 @@ import { ICluster } from 'aws-cdk-lib/aws-eks';
 import { AOCNamespaceConstruct } from './aoc-namespace-construct';
 
 
-export class MockedServerCertConstruct extends Construct{
-    name : string
+export class MockedServerCertConstruct extends Construct {
+    name: string
+    mockedServerCert: Construct
 
     constructor(scope: Construct, id: string, props: MockedServerCertConstructProps) {
         super(scope, id);
@@ -25,7 +26,7 @@ export class MockedServerCertConstruct extends Construct{
             depends_on: [aws_eks_fargate_profile.test_profile]
         }
 
-        props.cluster.addManifest(mockedServerCertManifest)
+        this.mockedServerCert = props.cluster.addManifest(mockedServerCertManifest)
     }
 }
 
