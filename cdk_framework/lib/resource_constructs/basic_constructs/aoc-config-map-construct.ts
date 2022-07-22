@@ -11,22 +11,22 @@ export class AOCConfigMapConstruct extends Construct{
             super(scope, id);
 
             this.name = 'otel-config'
-            //TODO: THIS MUST BE SET TO THE SAME KEY IN DATA. FIGURE OUT HOW TO LINK
+            //TODO: THIS MUST BE SET TO BE THE SAME AS THE PROPERTY IN DATA. FIGURE OUT HOW TO LINK
             this.aocConfigPath = 'aoc-config.yml'
             const aocConfigMapManifest = {
-                    apiVersion: 'v1',
-                    kind: 'ConfigMap',
+                apiVersion: 'v1',
+                kind: 'ConfigMap',
 
-                    metadata: {
-                        name: this.name,
-                        namespace: props.aocNamespaceConstruct.name
-                    },
-                    
-                    data: {
-                        'aoc-config.yml': JSON.stringify(props.aocConfig)
-                    },
+                metadata: {
+                    name: this.name,
+                    namespace: props.aocNamespaceConstruct.name
+                },
+                
+                data: {
+                    'aoc-config.yml': JSON.stringify(props.aocConfig)
+                },
 
-                    // depends_on: [aws_eks_fargate_profile.test_profile]
+                // depends_on: [aws_eks_fargate_profile.test_profile]
             }
             
             props.cluster.addManifest('aoc-config-map', aocConfigMapManifest)

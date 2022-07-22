@@ -39,19 +39,19 @@ export function deployClusters(app: cdk.App) : Map <string, ClusterStack> {
 
     // deploy clusters
     const clusterStackMap = new Map <string, ClusterStack>()
-    for(const [key, value] of Object.entries(clusterConfigData['clusters'])) {
+    for (const [key, value] of Object.entries(clusterConfigData['clusters'])) {
         const val = Object(value)
         const kubernetesVersion = eks.KubernetesVersion.of(String(val['version']));
         const newStack = new ClusterStack(app, `${key}-stack`, {
-            launch_type: String(val['launch_type']),
+            launchType: String(val['launch_type']),
             name: key,
             vpc: vs.vpc,
             version: kubernetesVersion,
             cpu: String(val['cpu_architecture']),
-            node_size: String(val['node_size']),
+            nodeSize: String(val['node_size']),
             env: {
                 region: region
-            },
+            }
         })
         clusterStackMap.set(key, newStack)
     }
