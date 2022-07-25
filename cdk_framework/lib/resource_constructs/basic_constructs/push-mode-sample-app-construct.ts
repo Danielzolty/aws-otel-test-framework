@@ -16,7 +16,7 @@ export class PushModeSampleAppDeploymentConstruct extends Construct {
          // Using hard-coded values ultimately from push_mode_samples.tf and output.tf (assuming not adot operator)
         const grpcPort = 4317
         const udpPort = 55690
-        const listenAddressPort = 4567
+        const listenAddressPort = 8080
         const httpPort = 9411
 
         const pushModeSampleAppDeploymentManifest = {

@@ -61,12 +61,13 @@ export function deployResources(app: cdk.App, clusterStackMap: Map <string, Clus
     // TODO: it doesn't seem that this dependency is being inferred so need to add it explicitely
     sampleAppDeploymentConstruct.sampleAppDeployment.node.addDependency(aocNamespaceConstruct.aocNamespace)
 
-    // // add AOC Config Map resource
-    // const aocConfigMapConstruct = new AOCConfigMapConstruct(clusterStack, 'aoc-config-map-construct', {
-    //     cluster : cluster,
-    //     aocNamespaceConstruct : aocNamespaceConstruct,
-    //     aocConfig : collectorConfig
-    // })
+    // add AOC Config Map resource
+    const aocConfigMapConstruct = new AOCConfigMapConstruct(clusterStack, 'aoc-config-map-construct', {
+        cluster : cluster,
+        aocNamespaceConstruct : aocNamespaceConstruct,
+        aocConfig : collectorConfig
+    })
+    aocConfigMapConstruct.aocConfigMap.node.addDependency(aocNamespaceConstruct.aocNamespace)
 
     // // add MockedServerCert resource
     // const mockedServerCertConstruct = new MockedServerCertConstruct(this, 'mocked-server-cert', {
@@ -74,14 +75,16 @@ export function deployResources(app: cdk.App, clusterStackMap: Map <string, Clus
     //     aocNamespaceConstruct: aocConfigMapConstruct
     // })
 
-    // // add AOCDeployment resource
-    // const aocDeploymentConstruct = new AOCDeploymentConstruct(clusterStack, 'aoc-deployment-construct', {
-    //     cluster: cluster,
-    //     aocNamespaceConstruct: aocNamespaceConstruct,
-    //     sampleAppDeploymentConstruct: sampleAppDeploymentConstruct,
-    //     aocConfigMapConstruct: aocConfigMapConstruct
-    //     // mockedServerCertConstruct: mockedServerCertConstruct
-    // })
+    // add AOCDeployment resource
+    const aocDeploymentConstruct = new AOCDeploymentConstruct(clusterStack, 'aoc-deployment-construct', {
+        cluster: cluster,
+        aocNamespaceConstruct: aocNamespaceConstruct,
+        sampleAppDeploymentConstruct: sampleAppDeploymentConstruct,
+        aocConfigMapConstruct: aocConfigMapConstruct
+        // mockedServerCertConstruct: mockedServerCertConstruct
+    })
+    aocDeploymentConstruct.aocDeployment.node.addDependency(aocNamespaceConstruct.aocNamespace)
+    aocDeploymentConstruct.aocDeployment.node.addDependency(aocConfigMapConstruct.aocConfigMap)
 
 
 
