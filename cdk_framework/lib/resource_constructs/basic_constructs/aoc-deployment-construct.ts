@@ -4,6 +4,7 @@ import { AOCConfigMapConstruct } from './aoc-config-map-construct';
 import { AOCNamespaceConstruct } from './aoc-namespace-construct';
 import { MockedServerCertConstruct } from './mocked-server-cert-construct';
 import { SampleAppDeploymentConstruct } from './sample-app-deployment-construct';
+import { AOCRoleConstruct } from './aoc-role-construct';
 
 export class AOCDeploymentConstruct extends Construct {
     aocDeployment: Construct
@@ -45,8 +46,7 @@ export class AOCDeploymentConstruct extends Construct {
             
                     spec: {
                         // serviceAccountName: 'aoc-role-${module.common.testing_id}',
-                        // hard-coded the testing ID, need to use a random ID generator (search random_id to see how terraform does it)
-                        serviceAccountName: 'aoc-role-1',
+                        serviceAccountName: props.aocRoleConstuct.name,
                         automountServiceAccountToken: true,
                         
                         volumes: [
@@ -134,6 +134,7 @@ export interface AOCDeploymentConstructProps {
     cluster: ICluster
     aocNamespaceConstruct: AOCNamespaceConstruct
     sampleAppDeploymentConstruct: SampleAppDeploymentConstruct
+    aocRoleConstuct: AOCRoleConstruct
     aocConfigMapConstruct: AOCConfigMapConstruct
     // mockedServerCertConstruct: MockedServerCertConstruct
 }

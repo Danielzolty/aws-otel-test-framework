@@ -8,6 +8,7 @@ import { AOCNamespaceConstruct } from './resource_constructs/basic_constructs/ao
 import { SampleAppDeploymentConstruct } from './resource_constructs/basic_constructs/sample-app-deployment-construct';
 import { AOCConfigMapConstruct } from './resource_constructs/basic_constructs/aoc-config-map-construct';
 import { AOCDeploymentConstruct } from './resource_constructs/basic_constructs/aoc-deployment-construct';
+import { AOCRoleConstruct } from './resource_constructs/basic_constructs/aoc-role-construct';
 
 
 export function deployResources(app: cdk.App, clusterStackMap: Map <string, ClusterStack>) {
@@ -40,10 +41,13 @@ export function deployResources(app: cdk.App, clusterStackMap: Map <string, Clus
     var collectorConfig = testcaseConfig['collectorConfig']
 
     // deploy resources
+    // this should be a random value
+    const testingID = 1
 
     // add Namespace resource
     const aocNamespaceConstruct = new AOCNamespaceConstruct(clusterStack, 'aoc-namespace-construct', {
-        cluster: cluster
+        cluster: cluster,
+        testingID: testingID
     })
 
     // add Sample App resource
@@ -52,7 +56,7 @@ export function deployResources(app: cdk.App, clusterStackMap: Map <string, Clus
         throw new Error ('Region environment variable not set')
     }
     const sampleAppDeploymentConstruct = new SampleAppDeploymentConstruct(clusterStack, 'sample-app-deployment-construct', {
-        cluster : cluster,
+        cluster: cluster,
         sampleAppImageURL: sampleAppImageURL,
         sampleAppMode: sampleAppMode,
         aocNamespaceConstruct: aocNamespaceConstruct,
@@ -61,11 +65,19 @@ export function deployResources(app: cdk.App, clusterStackMap: Map <string, Clus
     // TODO: it doesn't seem that this dependency is being inferred so need to add it explicitely
     sampleAppDeploymentConstruct.sampleAppDeployment.node.addDependency(aocNamespaceConstruct.aocNamespace)
 
+    // add AOC Role resource
+    const aocRoleConstruct = new AOCRoleConstruct(clusterStack, 'aoc-role-construct', {
+        cluster: cluster,
+        testingID: testingID,
+        aocNamespaceConstruct: aocNamespaceConstruct
+    })
+    aocRoleConstruct.aocRole.node.addDependency(aocNamespaceConstruct.aocNamespace)
+    
     // add AOC Config Map resource
     const aocConfigMapConstruct = new AOCConfigMapConstruct(clusterStack, 'aoc-config-map-construct', {
-        cluster : cluster,
-        aocNamespaceConstruct : aocNamespaceConstruct,
-        aocConfig : collectorConfig
+        cluster: cluster,
+        aocNamespaceConstruct: aocNamespaceConstruct,
+        aocConfig: collectorConfig
     })
     aocConfigMapConstruct.aocConfigMap.node.addDependency(aocNamespaceConstruct.aocNamespace)
 
@@ -80,10 +92,12 @@ export function deployResources(app: cdk.App, clusterStackMap: Map <string, Clus
         cluster: cluster,
         aocNamespaceConstruct: aocNamespaceConstruct,
         sampleAppDeploymentConstruct: sampleAppDeploymentConstruct,
+        aocRoleConstuct: aocRoleConstruct,
         aocConfigMapConstruct: aocConfigMapConstruct
         // mockedServerCertConstruct: mockedServerCertConstruct
     })
     aocDeploymentConstruct.aocDeployment.node.addDependency(aocNamespaceConstruct.aocNamespace)
+    aocDeploymentConstruct.aocDeployment.node.addDependency(aocRoleConstruct.aocRole)
     aocDeploymentConstruct.aocDeployment.node.addDependency(aocConfigMapConstruct.aocConfigMap)
 
 

@@ -9,10 +9,8 @@ export class AOCNamespaceConstruct extends Construct {
         super(scope, id);
         
         // define the manifest
-        //TODO: This should be set to a random value
-        const random_value = 1
-        this.name = `aoc-namespace-${random_value}`
-        const aocNsManifest = {
+        this.name = `aoc-namespace-${props.testingID}`
+        const aocNamespaceManifest = {
             apiVersion: 'v1',
             kind: 'Namespace',
             metadata: { 
@@ -21,10 +19,11 @@ export class AOCNamespaceConstruct extends Construct {
         }
 
         // add the manifest to the cluster
-        this.aocNamespace = props.cluster.addManifest('aoc-namespace', aocNsManifest)
+        this.aocNamespace = props.cluster.addManifest('aoc-namespace', aocNamespaceManifest)
     }
 }
 
 export interface AOCNamespaceConstructProps {
-    cluster: ICluster;
+    cluster: ICluster
+    testingID: number
 }
