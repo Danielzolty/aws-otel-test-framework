@@ -2,7 +2,8 @@ import { Construct } from 'constructs';
 import { ICluster } from 'aws-cdk-lib/aws-eks';
 import { AOCNamespaceConstruct } from './aoc-namespace-construct';
 
-
+//TODO - Consider renaming. Role is a different Kubernetes kind so 
+// this name is confusing
 export class AOCRoleConstruct extends Construct{
     name: string
     aocRole: Construct

@@ -42,6 +42,7 @@ export function deployResources(app: cdk.App, clusterStackMap: Map <string, Clus
 
     // deploy resources
     // this should be a random value
+    //TODO do we want to couple the constructs with a testing ID?
     const testingID = 1
 
     // add Namespace resource
