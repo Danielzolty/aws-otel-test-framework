@@ -4,31 +4,28 @@ import { AOCNamespaceConstruct } from './aoc-namespace-construct';
 
 
 export class PushModeSampleAppDeploymentConstruct extends Construct {
-   sampleAppLabelSelector: string
    pushModeSampleAppDeployment: Construct
 
    constructor(scope: Construct, id: string, props: PushModeSampleAppDeploymentConstructProps) {
         super(scope, id);
-
-        this.sampleAppLabelSelector = 'sample-app'
 
          // configs
          // Using hard-coded values ultimately from push_mode_samples.tf and output.tf (assuming not adot operator)
         const grpcPort = 4317
         const udpPort = 55690
         const listenAddressPort = 8080
-        const httpPort = 9411
+        const httpPort = 4318
 
         const pushModeSampleAppDeploymentManifest = {
             apiVersion: 'apps/v1',
             kind: 'Deployment',
          
             metadata: {
-                name: this.sampleAppLabelSelector,
+                name: props.sampleAppLabelSelector,
                 // namespace: var.aoc_namespace,
-                namespace: props.aocNamespaceConstruct.name,
+                namespace: props.namespaceName,
                 labels: {
-                    app: this.sampleAppLabelSelector
+                    app: props.sampleAppLabelSelector
                 }
             },
 
@@ -38,7 +35,7 @@ export class PushModeSampleAppDeploymentConstruct extends Construct {
                 selector: {
                     matchLabels: {
                         // app: local.sample_app_label_selector
-                        app: this.sampleAppLabelSelector
+                        app: props.sampleAppLabelSelector
                     }
                 },
 
@@ -46,7 +43,7 @@ export class PushModeSampleAppDeploymentConstruct extends Construct {
                     metadata: {
                         labels: {
                             // app: local.sample_app_label_selector
-                            app: this.sampleAppLabelSelector
+                            app: props.sampleAppLabelSelector
                         }
                     },
 
@@ -54,7 +51,7 @@ export class PushModeSampleAppDeploymentConstruct extends Construct {
                         //sample app
                         containers: [
                             {
-                                name: this.sampleAppLabelSelector,
+                                name: props.sampleAppLabelSelector,
                                 //image: local.eks_pod_config['image'],
                                 image: props.sampleAppImageURL,
                                 imagePullPolicy: 'Always',
@@ -144,7 +141,8 @@ export class PushModeSampleAppDeploymentConstruct extends Construct {
 
 export interface PushModeSampleAppDeploymentConstructProps {
       cluster: ICluster;
-      aocNamespaceConstruct: AOCNamespaceConstruct
+      namespaceName: string
+      sampleAppLabelSelector: string
       sampleAppImageURL: string
       region: string
 }

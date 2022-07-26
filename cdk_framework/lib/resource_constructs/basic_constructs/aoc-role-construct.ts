@@ -5,21 +5,18 @@ import { AOCNamespaceConstruct } from './aoc-namespace-construct';
 //TODO - Consider renaming. Role is a different Kubernetes kind so 
 // this name is confusing
 export class AOCRoleConstruct extends Construct{
-    name: string
     aocRole: Construct
 
     constructor(scope: Construct, id: string, props: aocRoleConstructProps){
         super(scope, id);
-
-        this.name = `aoc-role-${props.testingID}`
 
         // define the manifest
         const aocRoleManifest = {
             apiVersion: "v1",
             kind: "ServiceAccount",
             metadata: {
-                name: this.name,
-                namespace: props.aocNamespaceConstruct.name
+                name: props.name,
+                namespace: props.namespaceName
             },
             
             automountServiceAccountToken: true
@@ -32,6 +29,6 @@ export class AOCRoleConstruct extends Construct{
 
 export interface aocRoleConstructProps {
     cluster: ICluster
-    testingID: Number
-    aocNamespaceConstruct: AOCNamespaceConstruct
+    name: string
+    namespaceName: string
 }

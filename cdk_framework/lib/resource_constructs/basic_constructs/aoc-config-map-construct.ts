@@ -1,26 +1,29 @@
 import { Construct } from 'constructs';
 import { ICluster } from 'aws-cdk-lib/aws-eks';
 import { AOCNamespaceConstruct } from './aoc-namespace-construct';
+import { print } from 'util';
 
 
 export class AOCConfigMapConstruct extends Construct {
-        name: string
-        aocConfigPath: string
         aocConfigMap: Construct
 
         constructor(scope: Construct, id: string, props: AOCConfigMapConstructProps) {
             super(scope, id);
 
-            this.name = 'otel-config'
-            //TODO: THIS MUST BE SET TO BE THE SAME AS THE PROPERTY IN DATA. FIGURE OUT HOW TO LINK
-            this.aocConfigPath = 'aoc-config.yml'
+            //TODO: Figure out how to set the key in data to the aocConfigPath Variable
+            // For now just assert that they're the same
+            props.aocConfigPath = 'aoc-config.yml'
+            if (props.aocConfigPath !== 'aoc-config.yml') {
+                throw new Error('Config path must be set to "aoc-config.yml"');
+            }
+            
             const aocConfigMapManifest = {
                 apiVersion: 'v1',
                 kind: 'ConfigMap',
 
                 metadata: {
-                    name: this.name,
-                    namespace: props.aocNamespaceConstruct.name
+                    name: props.name,
+                    namespace: props.namespaceName
                 },
                 
                 data: {
@@ -32,26 +35,12 @@ export class AOCConfigMapConstruct extends Construct {
             
             this.aocConfigMap = props.cluster.addManifest('aoc-config-map', aocConfigMapManifest)
         }
-
-        // convertToYAMLString(map: Object) {
-        //     var yamlString = ''
-        //     map = Object(map)
-        //     for (const [key, value] of Object.entries(map)){
-        //         yamlString += `${key}: `
-        //         if (typeof value === 'string') {
-        //             yamlString += `${value}`
-        //         } else {
-        //             yamlString += '\n\t' + this.convertToYAMLString(value)
-        //         }
-        //         yamlString += '\n'
-        //     }
-        //     return yamlString
-        // }
 }
 
 export interface AOCConfigMapConstructProps {
         cluster: ICluster
-        aocNamespaceConstruct: AOCNamespaceConstruct
-        //What type should this be?
+        name: string
+        namespaceName: string
+        aocConfigPath: string
         aocConfig: Object
 }

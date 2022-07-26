@@ -12,14 +12,15 @@ export class SampleAppDeploymentConstruct extends Construct {
     constructor(scope: Construct, id: string, props: SampleAppDeploymentConstructProps){
          super(scope, id);
 
+        this.sampleAppLabelSelector = props.sampleAppLabelSelector
          if (props.sampleAppMode === 'push'){
             const pushModeSampleAppDeploymentConstruct = new PushModeSampleAppDeploymentConstruct(this, 'push-mode-sample-app-construct', {
                 cluster: props.cluster,
-                aocNamespaceConstruct: props.aocNamespaceConstruct,
+                namespaceName: props.namespaceName,
+                sampleAppLabelSelector: props.sampleAppLabelSelector,
                 sampleAppImageURL: props.sampleAppImageURL,
                 region: props.region
             })
-            this.sampleAppLabelSelector = pushModeSampleAppDeploymentConstruct.sampleAppLabelSelector
             this.sampleAppDeployment = pushModeSampleAppDeploymentConstruct.pushModeSampleAppDeployment
          }
         //  else if (props.sampleAppMode === 'pull'){
@@ -35,8 +36,9 @@ export class SampleAppDeploymentConstruct extends Construct {
 
 export interface SampleAppDeploymentConstructProps {
     cluster: ICluster
+    sampleAppLabelSelector: string
     sampleAppImageURL: string
     sampleAppMode: string
-    aocNamespaceConstruct: AOCNamespaceConstruct
+    namespaceName: string
     region: string
 }
