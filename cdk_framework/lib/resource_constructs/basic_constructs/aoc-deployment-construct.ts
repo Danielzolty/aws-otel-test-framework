@@ -1,10 +1,8 @@
 import { Construct } from 'constructs';
 import { ICluster } from 'aws-cdk-lib/aws-eks';
 import { AOCConfigMapConstruct } from './aoc-config-map-construct';
-import { AOCNamespaceConstruct } from './aoc-namespace-construct';
-import { MockedServerCertConstruct } from './mocked-server-cert-construct';
-import { SampleAppDeploymentConstruct } from './sample-app-deployment-construct';
-import { AOCRoleConstruct } from './aoc-role-construct';
+import { NamespaceConstruct } from './namespace-construct';
+import { ServiceAccountConstruct } from './service-account-construct';
 
 export class AOCDeploymentConstruct extends Construct {
     aocDeployment: Construct
@@ -20,7 +18,7 @@ export class AOCDeploymentConstruct extends Construct {
             metadata: {
                 name: 'aoc',
                 //namespace: var.deployment_type == 'fargate' ? tolist(aws_eks_fargate_profile.test_profile[count.index].selector)[0].namespace : kubernetes_namespace.aoc_ns.metadata[0].name,
-                namespace: props.namespaceName,
+                namespace: props.namespaceConstruct.name,
                 labels: {
                     app: 'aoc'
                 }
@@ -32,7 +30,7 @@ export class AOCDeploymentConstruct extends Construct {
                 selector: {
                     matchLabels: {
                         // app: local.sample_app_label_selector
-                        app: props.aocLabelSelector
+                        app: props.aocAppLabel
                     }
                 },
             
@@ -40,13 +38,13 @@ export class AOCDeploymentConstruct extends Construct {
                     metadata: {
                         labels: {
                             // app: local.sample_app_label_selector
-                            app: props.aocLabelSelector
+                            app: props.aocAppLabel
                         }
                     },
             
                     spec: {
                         // serviceAccountName: 'aoc-role-${module.common.testing_id}',
-                        serviceAccountName: props.aocRoleName,
+                        serviceAccountName: props.serviceAccountConstruct.name,
                         automountServiceAccountToken: true,
                         
                         volumes: [
@@ -54,11 +52,11 @@ export class AOCDeploymentConstruct extends Construct {
                                 // in the old framework the name was hardcoded to otel-config (as well as below in the volumeMounts)
                                 // and only the name in the config map accessed a variable which ended up being the same name
                                 // I think it's simpler to just set both to the variable
-                                name: props.aocConfigMapName,
+                                name: props.aocConfigMapConstruct.name,
                                 configMap: {
                                     // name: kubernetes_config_map.aoc_config_map.0.metadata[0].name
                                     //Using a hard-coded name ultimately from otlp.tf
-                                    name: props.aocConfigMapName
+                                    name: props.aocConfigMapConstruct.name
                                 }
                             },
 
@@ -98,7 +96,7 @@ export class AOCDeploymentConstruct extends Construct {
                                 image: 'public.ecr.aws/aws-otel-test/adot-collector-integration-test:latest',
                                 imagePullPolicy: 'Always',
                                 args: [
-                                `--config=${aocConfigMountPath}/${props.aocConfigPath}`],
+                                `--config=${aocConfigMountPath}/${props.aocConfigMapConstruct.aocConfigPath}`],
                         
                                 resources: {
                                     limits: {
@@ -110,7 +108,7 @@ export class AOCDeploymentConstruct extends Construct {
                                 volumeMounts: [
                                     {
                                         mountPath: aocConfigMountPath,
-                                        name: props.aocConfigMapName
+                                        name: props.aocConfigMapConstruct.name
                                     }
                                     // {
                                     //     mountPath: '/etc/pki/tls/certs',
@@ -127,15 +125,16 @@ export class AOCDeploymentConstruct extends Construct {
         }
         
         this.aocDeployment = props.cluster.addManifest('aoc-deployment', aocDeploymentManifest)
+        this.aocDeployment.node.addDependency(props.namespaceConstruct.namespace)
+        this.aocDeployment.node.addDependency(props.serviceAccountConstruct.serviceAccount)
+        this.aocDeployment.node.addDependency(props.aocConfigMapConstruct.aocConfigMap)
     }
 }
 
 export interface AOCDeploymentConstructProps {
     cluster: ICluster
-    namespaceName: string
-    aocLabelSelector: string
-    aocRoleName: string
-    aocConfigMapName: string
-    aocConfigPath: string
-    // mockedServerCertConstruct: MockedServerCertConstruct
+    namespaceConstruct: NamespaceConstruct
+    aocAppLabel: string
+    serviceAccountConstruct: ServiceAccountConstruct
+    aocConfigMapConstruct: AOCConfigMapConstruct
 }

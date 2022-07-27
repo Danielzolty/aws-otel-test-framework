@@ -1,6 +1,6 @@
 import { Construct } from 'constructs';
 import { ICluster } from 'aws-cdk-lib/aws-eks';
-import { AOCNamespaceConstruct } from './aoc-namespace-construct';
+import { AOCNamespaceConstruct } from '../basic_constructs/namespace-construct';
 
 
 export class MockedServerCertConstruct extends Construct {

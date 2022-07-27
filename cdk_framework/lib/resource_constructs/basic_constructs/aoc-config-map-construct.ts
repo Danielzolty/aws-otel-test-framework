@@ -1,14 +1,14 @@
 import { Construct } from 'constructs';
 import { ICluster } from 'aws-cdk-lib/aws-eks';
-import { AOCNamespaceConstruct } from './aoc-namespace-construct';
-import { print } from 'util';
-import { ResourceConfigurationProps } from '../../resource-deployment';
+import { NamespaceConstruct } from './namespace-construct';
 
 
 export class AOCConfigMapConstruct extends Construct {
+        name: string
+        aocConfigPath: string
         aocConfigMap: Construct
 
-        constructor(scope: Construct, id: string, props: ResourceConfigurationProps) {
+        constructor(scope: Construct, id: string, props: AOCConfigMapConstructProps) {
             super(scope, id);
 
             //TODO: Figure out how to set the key in data to the aocConfigPath Variable
@@ -23,8 +23,8 @@ export class AOCConfigMapConstruct extends Construct {
                 kind: 'ConfigMap',
 
                 metadata: {
-                    name: props.aocConfigMapName,
-                    namespace: props.aocNamespaceName
+                    name: props.name,
+                    namespace: props.namespaceConstruct.name
                 },
                 
                 data: {
@@ -34,6 +34,17 @@ export class AOCConfigMapConstruct extends Construct {
                 // depends_on: [aws_eks_fargate_profile.test_profile]
             }
             
-            this.aocConfigMap = props.cluster.addManifest('aoc-config-map', aocConfigMapManifest)
+            this.name = props.name
+            this.aocConfigPath = props.aocConfigPath
+            this.aocConfigMap = props.cluster.addManifest(props.name, aocConfigMapManifest)
+            this.aocConfigMap.node.addDependency(props.namespaceConstruct.namespace)
         }
+}
+
+export interface AOCConfigMapConstructProps {
+    cluster: ICluster
+    name: string
+    namespaceConstruct: NamespaceConstruct
+    aocConfigPath: string
+    aocConfig: Object
 }

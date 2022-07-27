@@ -1,13 +1,12 @@
 import { Construct } from 'constructs';
 import { ICluster } from 'aws-cdk-lib/aws-eks';
-import { AOCNamespaceConstruct } from './aoc-namespace-construct';
-import { ResourceConfigurationProps } from '../../resource-deployment';
+import { NamespaceConstruct } from './namespace-construct';
 
 
 export class PushModeSampleAppDeploymentConstruct extends Construct {
    pushModeSampleAppDeployment: Construct
 
-   constructor(scope: Construct, id: string, props: ResourceConfigurationProps) {
+   constructor(scope: Construct, id: string, props: PushModeSampleAppDeploymentConstructProps) {
         super(scope, id);
 
          // configs
@@ -24,7 +23,7 @@ export class PushModeSampleAppDeploymentConstruct extends Construct {
             metadata: {
                 name: 'sample-app',
                 // namespace: var.aoc_namespace,
-                namespace: props.aocNamespaceName,
+                namespace: props.namespaceConstruct.name,
                 labels: {
                     app: 'sample-app'
                 }
@@ -135,17 +134,18 @@ export class PushModeSampleAppDeploymentConstruct extends Construct {
                 }
             }
         }
-      
+
         this.pushModeSampleAppDeployment = props.cluster.addManifest('push-mode-sample-app-deployment', pushModeSampleAppDeploymentManifest)
+        this.pushModeSampleAppDeployment.node.addDependency(props.namespaceConstruct.namespace)
     }
 }
 
-// export interface PushModeSampleAppDeploymentConstructProps {
-//       cluster: ICluster;
-//       namespaceName: string
-//       sampleAppLabelSelector: string
-//       sampleAppImageURL: string
-//       region: string
-//       grpcServiceName: string
-//       grpcPort: number
-// }
+export interface PushModeSampleAppDeploymentConstructProps {
+      cluster: ICluster;
+      namespaceConstruct: NamespaceConstruct
+      sampleAppLabelSelector: string
+      sampleAppImageURL: string
+      region: string
+      grpcServiceName: string
+      grpcPort: number
+}

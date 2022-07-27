@@ -2,20 +2,25 @@ import { Construct } from 'constructs';
 import { ICluster } from 'aws-cdk-lib/aws-eks';
 import { PushModeSampleAppDeploymentConstruct } from './push-mode-sample-app-construct';
 import { PullModeSampleAppDeploymentConstruct } from '../other_constructs/pull-mode-sample-app-construct';
-import { AOCNamespaceConstruct } from './aoc-namespace-construct';
-import { ResourceConfigurationProps } from '../../resource-deployment';
+import { NamespaceConstruct } from './namespace-construct';
 
 
 export class SampleAppDeploymentConstruct extends Construct {
-    sampleAppLabelSelector: string
     sampleAppDeployment: Construct
 
-    constructor(scope: Construct, id: string, props: ResourceConfigurationProps){
+    constructor(scope: Construct, id: string, props: SampleAppDeploymentConstructProps){
          super(scope, id);
 
-        this.sampleAppLabelSelector = props.sampleAppLabelSelector
          if (props.sampleAppMode === 'push'){
-            const pushModeSampleAppDeploymentConstruct = new PushModeSampleAppDeploymentConstruct(this, 'push-mode-sample-app-construct', props)
+            const pushModeSampleAppDeploymentConstruct = new PushModeSampleAppDeploymentConstruct(this, 'push-mode-sample-app-construct', {
+                cluster: props.cluster,
+                namespaceConstruct: props.namespaceConstruct,
+                sampleAppLabelSelector: props.sampleAppLabel,
+                sampleAppImageURL: props.sampleAppImageURL,
+                grpcServiceName: props.grpcServiceName,
+                grpcPort: props.grpcPort,
+                region: props.region
+            })
             this.sampleAppDeployment = pushModeSampleAppDeploymentConstruct.pushModeSampleAppDeployment
          }
         //  else if (props.sampleAppMode === 'pull'){
@@ -29,13 +34,13 @@ export class SampleAppDeploymentConstruct extends Construct {
     }
 }
 
-// export interface SampleAppDeploymentConstructProps {
-//     cluster: ICluster
-//     sampleAppLabelSelector: string
-//     sampleAppImageURL: string
-//     sampleAppMode: string
-//     namespaceName: string
-//     grpcServiceName: string
-//     grpcPort: number
-//     region: string
-// }
+export interface SampleAppDeploymentConstructProps {
+    cluster: ICluster
+    namespaceConstruct: NamespaceConstruct
+    sampleAppLabel: string
+    sampleAppImageURL: string
+    sampleAppMode: string
+    grpcServiceName: string
+    grpcPort: number
+    region: string
+}
