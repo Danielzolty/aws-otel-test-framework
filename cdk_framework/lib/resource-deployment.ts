@@ -14,11 +14,6 @@ import { PropagatedTagSource } from 'aws-cdk-lib/aws-ecs';
 
 
 export function deployResources(app: cdk.App, clusterStackMap: Map <string, ClusterStack>) {
-    const region = process.env.REGION
-    if (region == undefined) {
-        throw new Error ('Region environment variable not set')
-    }
-
     // load the file
     const testcaseConfigRoute = process.env.TESTCASE_CONFIG_PATH
     // if no testcase config path is provided, throw error
@@ -37,6 +32,10 @@ export function deployResources(app: cdk.App, clusterStackMap: Map <string, Clus
     const testcaseConfig = data['testcase']
 
     // load the scope and the props for the resources
+    const region = process.env.REGION
+    if (region == undefined) {
+        throw new Error ('Region environment variable not set')
+    }
     var clusterName = testcaseConfig['clusterName']
     var clusterStack = clusterStackMap.get(clusterName)
     if (clusterStack == undefined) {
@@ -52,9 +51,10 @@ export function deployResources(app: cdk.App, clusterStackMap: Map <string, Clus
     // the testing ID should be a unique random value
     const testingID = 1
     const aocNamespaceName = `aoc-namespace-${testingID}`
-    const grpcName = 'aoc-grpc'
+    const grpcServiceName = 'aoc-grpc'
     const grpcPort = 4317
     const sampleAppLabelSelector = 'sample-app'
+    const aocLabelSelector = 'aoc'
     const aocRoleName = `aoc-role-${testingID}`
     const aocConfigMapName = 'otel-config'
     const aocConfigPath = 'aoc-config.yml'
@@ -73,13 +73,14 @@ export function deployResources(app: cdk.App, clusterStackMap: Map <string, Clus
     // for the grpc service which is deployed prior to the sample app
 
     // add GRPC serivce
+    // does this service depend on the collector?
     var aocGRPCServiceConstruct = null
     if (sampleAppMode == 'push'){
         aocGRPCServiceConstruct = new AOCGRPCServiceConstruct(clusterStack, 'aoc-grpc-service-construct', {
             cluster: cluster,
-            name: grpcName,
+            name: grpcServiceName,
             namespaceName: aocNamespaceName,
-            sampleAppLabelSelector: sampleAppLabelSelector,
+            aocLabelSelector: aocLabelSelector,
             grpcPort: grpcPort
         })
         aocGRPCServiceConstruct.aocGRPCService.node.addDependency(aocNamespaceConstruct.aocNamespace)
@@ -92,6 +93,8 @@ export function deployResources(app: cdk.App, clusterStackMap: Map <string, Clus
         sampleAppLabelSelector: sampleAppLabelSelector,
         sampleAppImageURL: sampleAppImageURL,
         sampleAppMode: sampleAppMode,
+        grpcServiceName: grpcServiceName,
+        grpcPort: grpcPort,
         region: region
     })
     // TODO: it doesn't seem that this dependency is being inferred so need to add it explicitely
@@ -100,23 +103,23 @@ export function deployResources(app: cdk.App, clusterStackMap: Map <string, Clus
         sampleAppDeploymentConstruct.sampleAppDeployment.node.addDependency(aocGRPCServiceConstruct.aocGRPCService)
     }
 
-    // // add AOC Role resource
-    // const aocRoleConstruct = new AOCRoleConstruct(clusterStack, 'aoc-role-construct', {
-    //     cluster: cluster,
-    //     name: aocRoleName,
-    //     namespaceName: aocNamespaceName
-    // })
-    // aocRoleConstruct.aocRole.node.addDependency(aocNamespaceConstruct.aocNamespace)
+    // add AOC Role resource
+    const aocRoleConstruct = new AOCRoleConstruct(clusterStack, 'aoc-role-construct', {
+        cluster: cluster,
+        name: aocRoleName,
+        namespaceName: aocNamespaceName
+    })
+    aocRoleConstruct.aocRole.node.addDependency(aocNamespaceConstruct.aocNamespace)
     
-    // // add AOC Config Map resource
-    // const aocConfigMapConstruct = new AOCConfigMapConstruct(clusterStack, 'aoc-config-map-construct', {
-    //     cluster: cluster,
-    //     name: aocConfigMapName,
-    //     namespaceName: aocNamespaceName,
-    //     aocConfigPath: aocConfigPath,
-    //     aocConfig: collectorConfig
-    // })
-    // aocConfigMapConstruct.aocConfigMap.node.addDependency(aocNamespaceConstruct.aocNamespace)
+    // add AOC Config Map resource
+    const aocConfigMapConstruct = new AOCConfigMapConstruct(clusterStack, 'aoc-config-map-construct', {
+        cluster: cluster,
+        name: aocConfigMapName,
+        namespaceName: aocNamespaceName,
+        aocConfigPath: aocConfigPath,
+        aocConfig: collectorConfig
+    })
+    aocConfigMapConstruct.aocConfigMap.node.addDependency(aocNamespaceConstruct.aocNamespace)
 
     // // // // add MockedServerCert resource
     // // // const mockedServerCertConstruct = new MockedServerCertConstruct(this, 'mocked-server-cert', {
@@ -124,19 +127,19 @@ export function deployResources(app: cdk.App, clusterStackMap: Map <string, Clus
     // // //     aocNamespaceConstruct: aocConfigMapConstruct
     // // // })
 
-    // // add AOCDeployment resource
-    // const aocDeploymentConstruct = new AOCDeploymentConstruct(clusterStack, 'aoc-deployment-construct', {
-    //     cluster: cluster,
-    //     namespaceName: aocNamespaceName,
-    //     sampleAppLabelSelector: sampleAppLabelSelector,
-    //     aocRoleName: aocRoleName,
-    //     aocConfigMapName: aocConfigMapName,
-    //     aocConfigPath: aocConfigPath
-    //     // mockedServerCertConstruct: mockedServerCertConstruct
-    // })
-    // aocDeploymentConstruct.aocDeployment.node.addDependency(aocNamespaceConstruct.aocNamespace)
-    // aocDeploymentConstruct.aocDeployment.node.addDependency(aocRoleConstruct.aocRole)
-    // aocDeploymentConstruct.aocDeployment.node.addDependency(aocConfigMapConstruct.aocConfigMap)
+    // add AOCDeployment resource
+    const aocDeploymentConstruct = new AOCDeploymentConstruct(clusterStack, 'aoc-deployment-construct', {
+        cluster: cluster,
+        namespaceName: aocNamespaceName,
+        aocLabelSelector: aocLabelSelector,
+        aocRoleName: aocRoleName,
+        aocConfigMapName: aocConfigMapName,
+        aocConfigPath: aocConfigPath
+        // mockedServerCertConstruct: mockedServerCertConstruct
+    })
+    aocDeploymentConstruct.aocDeployment.node.addDependency(aocNamespaceConstruct.aocNamespace)
+    aocDeploymentConstruct.aocDeployment.node.addDependency(aocRoleConstruct.aocRole)
+    aocDeploymentConstruct.aocDeployment.node.addDependency(aocConfigMapConstruct.aocConfigMap)
 
 
 

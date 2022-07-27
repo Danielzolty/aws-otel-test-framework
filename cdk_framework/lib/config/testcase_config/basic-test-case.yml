@@ -26,6 +26,7 @@ testcase:
       awsxray:
       awsemf:
       logging:
+        logLevel: debug
 
     service:
       pipelines:

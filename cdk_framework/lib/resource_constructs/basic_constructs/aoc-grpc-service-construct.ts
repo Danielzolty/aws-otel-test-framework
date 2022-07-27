@@ -19,7 +19,7 @@ export class AOCGRPCServiceConstruct extends Construct {
             },
             spec: {
                 selector: {
-                    app: props.sampleAppLabelSelector
+                    app: props.aocLabelSelector
                 },
             
                 ports: [
@@ -41,6 +41,6 @@ export interface AOCGRPCConstructProps {
     cluster: ICluster
     name: string
     namespaceName: string
-    sampleAppLabelSelector: string
+    aocLabelSelector: string
     grpcPort: number
 }

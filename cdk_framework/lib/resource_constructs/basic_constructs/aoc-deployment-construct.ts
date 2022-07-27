@@ -18,11 +18,14 @@ export class AOCDeploymentConstruct extends Construct {
             kind: 'Deployment',
 
             metadata: {
-                name: 'aoc',
+                // in the TF framework name and the app in labels are hard-coded to 'aoc'.
+                // which might make more sense since I don't think they're tied to the 
+                // label selector
+                name: props.aocLabelSelector,
                 //namespace: var.deployment_type == 'fargate' ? tolist(aws_eks_fargate_profile.test_profile[count.index].selector)[0].namespace : kubernetes_namespace.aoc_ns.metadata[0].name,
                 namespace: props.namespaceName,
                 labels: {
-                    app: 'aoc'
+                    app: props.aocLabelSelector
                 }
             },
             
@@ -32,7 +35,7 @@ export class AOCDeploymentConstruct extends Construct {
                 selector: {
                     matchLabels: {
                         // app: local.sample_app_label_selector
-                        app: props.sampleAppLabelSelector
+                        app: props.aocLabelSelector
                     }
                 },
             
@@ -40,7 +43,7 @@ export class AOCDeploymentConstruct extends Construct {
                     metadata: {
                         labels: {
                             // app: local.sample_app_label_selector
-                            app: props.sampleAppLabelSelector
+                            app: props.aocLabelSelector
                         }
                     },
             
@@ -133,7 +136,7 @@ export class AOCDeploymentConstruct extends Construct {
 export interface AOCDeploymentConstructProps {
     cluster: ICluster
     namespaceName: string
-    sampleAppLabelSelector: string
+    aocLabelSelector: string
     aocRoleName: string
     aocConfigMapName: string
     aocConfigPath: string

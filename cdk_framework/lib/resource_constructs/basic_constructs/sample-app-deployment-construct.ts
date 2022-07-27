@@ -19,6 +19,8 @@ export class SampleAppDeploymentConstruct extends Construct {
                 namespaceName: props.namespaceName,
                 sampleAppLabelSelector: props.sampleAppLabelSelector,
                 sampleAppImageURL: props.sampleAppImageURL,
+                grpcServiceName: props.grpcServiceName,
+                grpcPort: props.grpcPort,
                 region: props.region
             })
             this.sampleAppDeployment = pushModeSampleAppDeploymentConstruct.pushModeSampleAppDeployment
@@ -40,5 +42,7 @@ export interface SampleAppDeploymentConstructProps {
     sampleAppImageURL: string
     sampleAppMode: string
     namespaceName: string
+    grpcServiceName: string
+    grpcPort: number
     region: string
 }
