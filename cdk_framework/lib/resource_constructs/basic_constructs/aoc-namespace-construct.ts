@@ -1,10 +1,10 @@
 import { Construct } from 'constructs';
-import { ICluster } from 'aws-cdk-lib/aws-eks';
+import { ResourceConfigurationProps } from '../../resource-deployment' 
 
 export class AOCNamespaceConstruct extends Construct {
     aocNamespace: Construct
 
-    constructor(scope: Construct, id: string, props: AOCNamespaceConstructProps){
+    constructor(scope: Construct, id: string, props: ResourceConfigurationProps){
         super(scope, id);
         
         // define the manifest
@@ -12,7 +12,7 @@ export class AOCNamespaceConstruct extends Construct {
             apiVersion: 'v1',
             kind: 'Namespace',
             metadata: { 
-                name: props.name
+                name: props.aocNamespaceName
             },
         }
 
@@ -21,7 +21,7 @@ export class AOCNamespaceConstruct extends Construct {
     }
 }
 
-export interface AOCNamespaceConstructProps {
-    cluster: ICluster
-    name: string
-}
+// export interface AOCNamespaceConstructProps {
+//     cluster: ICluster
+//     name: string
+// }

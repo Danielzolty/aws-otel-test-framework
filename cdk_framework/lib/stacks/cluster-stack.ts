@@ -3,10 +3,11 @@ import { Construct } from 'constructs';
 import { Vpc } from 'aws-cdk-lib/aws-ec2';
 import { AwsAuth, KubernetesVersion } from 'aws-cdk-lib/aws-eks';
 import { Role, ServicePrincipal, ManagedPolicy } from 'aws-cdk-lib/aws-iam';
+import { ICluster } from 'aws-cdk-lib/aws-ecs';
 
 
 export class ClusterStack extends Stack {
-    cluster : eks.Cluster
+    cluster : eks.Cluster | eks.FargateCluster
 
     constructor(scope: Construct, id: string, props: ClusterStackProps) {
         super(scope, id, props);

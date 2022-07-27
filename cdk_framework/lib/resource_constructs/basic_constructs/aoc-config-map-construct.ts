@@ -2,12 +2,13 @@ import { Construct } from 'constructs';
 import { ICluster } from 'aws-cdk-lib/aws-eks';
 import { AOCNamespaceConstruct } from './aoc-namespace-construct';
 import { print } from 'util';
+import { ResourceConfigurationProps } from '../../resource-deployment';
 
 
 export class AOCConfigMapConstruct extends Construct {
         aocConfigMap: Construct
 
-        constructor(scope: Construct, id: string, props: AOCConfigMapConstructProps) {
+        constructor(scope: Construct, id: string, props: ResourceConfigurationProps) {
             super(scope, id);
 
             //TODO: Figure out how to set the key in data to the aocConfigPath Variable
@@ -22,8 +23,8 @@ export class AOCConfigMapConstruct extends Construct {
                 kind: 'ConfigMap',
 
                 metadata: {
-                    name: props.name,
-                    namespace: props.namespaceName
+                    name: props.aocConfigMapName,
+                    namespace: props.aocNamespaceName
                 },
                 
                 data: {
@@ -35,12 +36,4 @@ export class AOCConfigMapConstruct extends Construct {
             
             this.aocConfigMap = props.cluster.addManifest('aoc-config-map', aocConfigMapManifest)
         }
-}
-
-export interface AOCConfigMapConstructProps {
-        cluster: ICluster
-        name: string
-        namespaceName: string
-        aocConfigPath: string
-        aocConfig: Object
 }

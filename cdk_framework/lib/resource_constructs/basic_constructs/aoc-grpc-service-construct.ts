@@ -1,11 +1,12 @@
 import { Construct } from 'constructs';
 import { ICluster } from 'aws-cdk-lib/aws-eks';
 import { AOCNamespaceConstruct } from './aoc-namespace-construct';
+import { ResourceConfigurationProps } from '../../resource-deployment';
 
 export class AOCGRPCServiceConstruct extends Construct {
     aocGRPCService: Construct
 
-    constructor(scope: Construct, id: string, props: AOCGRPCConstructProps){
+    constructor(scope: Construct, id: string, props: ResourceConfigurationProps){
         super(scope, id);
         
         // define the manifest
@@ -14,8 +15,8 @@ export class AOCGRPCServiceConstruct extends Construct {
             kind: 'Service',
 
             metadata: {
-                name: props.name,
-                namespace: props.namespaceName
+                name: props.grpcServiceName,
+                namespace: props.aocNamespaceName
             },
             spec: {
                 selector: {
@@ -35,12 +36,4 @@ export class AOCGRPCServiceConstruct extends Construct {
         // add the manifest to the cluster
         this.aocGRPCService = props.cluster.addManifest('aoc-grpc-service', AOCGRPCServiceManifest)
     }
-}
-
-export interface AOCGRPCConstructProps {
-    cluster: ICluster
-    name: string
-    namespaceName: string
-    aocLabelSelector: string
-    grpcPort: number
 }

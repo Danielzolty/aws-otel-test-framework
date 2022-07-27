@@ -18,14 +18,11 @@ export class AOCDeploymentConstruct extends Construct {
             kind: 'Deployment',
 
             metadata: {
-                // in the TF framework name and the app in labels are hard-coded to 'aoc'.
-                // which might make more sense since I don't think they're tied to the 
-                // label selector
-                name: props.aocLabelSelector,
+                name: 'aoc',
                 //namespace: var.deployment_type == 'fargate' ? tolist(aws_eks_fargate_profile.test_profile[count.index].selector)[0].namespace : kubernetes_namespace.aoc_ns.metadata[0].name,
                 namespace: props.namespaceName,
                 labels: {
-                    app: props.aocLabelSelector
+                    app: 'aoc'
                 }
             },
             

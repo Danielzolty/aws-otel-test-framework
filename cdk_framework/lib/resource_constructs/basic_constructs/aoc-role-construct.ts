@@ -1,13 +1,14 @@
 import { Construct } from 'constructs';
 import { ICluster } from 'aws-cdk-lib/aws-eks';
 import { AOCNamespaceConstruct } from './aoc-namespace-construct';
+import { ResourceConfigurationProps } from '../../resource-deployment';
 
 //TODO - Consider renaming. Role is a different Kubernetes kind so 
 // this name is confusing
 export class AOCRoleConstruct extends Construct{
     aocRole: Construct
 
-    constructor(scope: Construct, id: string, props: aocRoleConstructProps){
+    constructor(scope: Construct, id: string, props: ResourceConfigurationProps){
         super(scope, id);
 
         // define the manifest
@@ -15,8 +16,8 @@ export class AOCRoleConstruct extends Construct{
             apiVersion: "v1",
             kind: "ServiceAccount",
             metadata: {
-                name: props.name,
-                namespace: props.namespaceName
+                name: props.aocRoleName,
+                namespace: props.aocNamespaceName
             },
             
             automountServiceAccountToken: true
@@ -25,10 +26,4 @@ export class AOCRoleConstruct extends Construct{
         // add the manifest to the cluster
         this.aocRole = props.cluster.addManifest('aoc-role', aocRoleManifest)
     }
-}
-
-export interface aocRoleConstructProps {
-    cluster: ICluster
-    name: string
-    namespaceName: string
 }

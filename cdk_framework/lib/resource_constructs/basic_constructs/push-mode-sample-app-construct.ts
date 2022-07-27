@@ -1,12 +1,13 @@
 import { Construct } from 'constructs';
 import { ICluster } from 'aws-cdk-lib/aws-eks';
 import { AOCNamespaceConstruct } from './aoc-namespace-construct';
+import { ResourceConfigurationProps } from '../../resource-deployment';
 
 
 export class PushModeSampleAppDeploymentConstruct extends Construct {
    pushModeSampleAppDeployment: Construct
 
-   constructor(scope: Construct, id: string, props: PushModeSampleAppDeploymentConstructProps) {
+   constructor(scope: Construct, id: string, props: ResourceConfigurationProps) {
         super(scope, id);
 
          // configs
@@ -19,12 +20,13 @@ export class PushModeSampleAppDeploymentConstruct extends Construct {
             apiVersion: 'apps/v1',
             kind: 'Deployment',
          
+            // maybe change name to 'push-mode-sample-app'?
             metadata: {
-                name: props.sampleAppLabelSelector,
+                name: 'sample-app',
                 // namespace: var.aoc_namespace,
-                namespace: props.namespaceName,
+                namespace: props.aocNamespaceName,
                 labels: {
-                    app: props.sampleAppLabelSelector
+                    app: 'sample-app'
                 }
             },
 
@@ -50,7 +52,7 @@ export class PushModeSampleAppDeploymentConstruct extends Construct {
                         //sample app
                         containers: [
                             {
-                                name: props.sampleAppLabelSelector,
+                                name: 'sample-app',
                                 //image: local.eks_pod_config['image'],
                                 image: props.sampleAppImageURL,
                                 imagePullPolicy: 'Always',
@@ -138,12 +140,12 @@ export class PushModeSampleAppDeploymentConstruct extends Construct {
     }
 }
 
-export interface PushModeSampleAppDeploymentConstructProps {
-      cluster: ICluster;
-      namespaceName: string
-      sampleAppLabelSelector: string
-      sampleAppImageURL: string
-      region: string
-      grpcServiceName: string
-      grpcPort: number
-}
+// export interface PushModeSampleAppDeploymentConstructProps {
+//       cluster: ICluster;
+//       namespaceName: string
+//       sampleAppLabelSelector: string
+//       sampleAppImageURL: string
+//       region: string
+//       grpcServiceName: string
+//       grpcPort: number
+// }
