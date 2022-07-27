@@ -7,18 +7,16 @@ export class NamespaceConstruct extends Construct {
 
     constructor(scope: Construct, id: string, props: NamespaceConstructProps){
         super(scope, id);
+        this.name = props.name
         
-        // define the manifest
         const namespaceManifest = {
             apiVersion: 'v1',
             kind: 'Namespace',
             metadata: { 
-                name: props.name
+                name: this.name
             },
         }
 
-        // add the manifest to the cluster
-        this.name = props.name
         this.namespace = props.cluster.addManifest(props.name, namespaceManifest)
     }
 }

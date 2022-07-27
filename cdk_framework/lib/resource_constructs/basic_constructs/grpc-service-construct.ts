@@ -8,7 +8,6 @@ export class GRPCServiceConstruct extends Construct {
     constructor(scope: Construct, id: string, props: GRPCConstructProps){
         super(scope, id);
         
-        // define the manifest
         const grpcServiceManifest = {
             apiVersion: 'v1',
             kind: 'Service',
@@ -32,7 +31,6 @@ export class GRPCServiceConstruct extends Construct {
             }
         }
 
-        // add the manifest to the cluster
         this.grpcService = props.cluster.addManifest(props.name, grpcServiceManifest)
         this.grpcService.node.addDependency(props.namespaceConstruct.namespace)
     }

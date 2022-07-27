@@ -43,7 +43,6 @@ export class GeneralAOCDeploymentConstruct extends Construct{
             cluster: props.cluster,
             name: aocConfigMapName,
             namespaceConstruct: props.namespaceConstruct,
-            aocConfigPath: aocConfigPath,
             aocConfig: props.aocConfig
         })
 

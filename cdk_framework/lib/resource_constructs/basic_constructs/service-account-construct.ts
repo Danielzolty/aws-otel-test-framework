@@ -8,22 +8,20 @@ export class ServiceAccountConstruct extends Construct {
 
     constructor(scope: Construct, id: string, props: ServiceAccountConstructProps){
         super(scope, id);
+        this.name = props.name
 
         //TODO There's a service account constuct in CDK, should we use that?
-        // define the manifest
         const serviceAccountManifest = {
             apiVersion: "v1",
             kind: "ServiceAccount",
             metadata: {
-                name: props.name,
+                name: this.name,
                 namespace: props.namespaceConstruct.name
             },
             
             automountServiceAccountToken: true
         }
 
-        // add the manifest to the cluster
-        this.name = props.name
         this.serviceAccount = props.cluster.addManifest(props.name, serviceAccountManifest)
         this.serviceAccount.node.addDependency(props.namespaceConstruct.namespace)
     }

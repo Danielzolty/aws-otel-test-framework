@@ -10,20 +10,14 @@ export class AOCConfigMapConstruct extends Construct {
 
         constructor(scope: Construct, id: string, props: AOCConfigMapConstructProps) {
             super(scope, id);
-
-            //TODO: Figure out how to set the key in data to the aocConfigPath Variable
-            // For now just assert that they're the same
-            props.aocConfigPath = 'aoc-config.yml'
-            if (props.aocConfigPath !== 'aoc-config.yml') {
-                throw new Error('Config path must be set to "aoc-config.yml"');
-            }
+            this.name = props.name
             
             const aocConfigMapManifest = {
                 apiVersion: 'v1',
                 kind: 'ConfigMap',
 
                 metadata: {
-                    name: props.name,
+                    name: this.name,
                     namespace: props.namespaceConstruct.name
                 },
                 
@@ -33,9 +27,8 @@ export class AOCConfigMapConstruct extends Construct {
 
                 // depends_on: [aws_eks_fargate_profile.test_profile]
             }
-            
-            this.name = props.name
-            this.aocConfigPath = props.aocConfigPath
+
+            this.aocConfigPath = Object.keys(aocConfigMapManifest['data'])[0]
             this.aocConfigMap = props.cluster.addManifest(props.name, aocConfigMapManifest)
             this.aocConfigMap.node.addDependency(props.namespaceConstruct.namespace)
         }
@@ -45,6 +38,5 @@ export interface AOCConfigMapConstructProps {
     cluster: ICluster
     name: string
     namespaceConstruct: NamespaceConstruct
-    aocConfigPath: string
     aocConfig: Object
 }
