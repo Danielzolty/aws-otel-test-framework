@@ -1,5 +1,5 @@
 import { Construct } from 'constructs';
-import { ICluster } from 'aws-cdk-lib/aws-eks';
+import { Cluster, FargateCluster } from 'aws-cdk-lib/aws-eks';
 import { NamespaceConstruct } from './namespace-construct';
 
 
@@ -141,7 +141,7 @@ export class PushModeSampleAppDeploymentConstruct extends Construct {
 }
 
 export interface PushModeSampleAppDeploymentConstructProps {
-      cluster: ICluster;
+      cluster: Cluster | FargateCluster
       namespaceConstruct: NamespaceConstruct
       sampleAppLabelSelector: string
       sampleAppImageURL: string

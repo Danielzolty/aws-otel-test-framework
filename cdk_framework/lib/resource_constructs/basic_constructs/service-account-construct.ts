@@ -1,5 +1,5 @@
 import { Construct } from 'constructs';
-import { ICluster } from 'aws-cdk-lib/aws-eks';
+import { Cluster, FargateCluster } from 'aws-cdk-lib/aws-eks';
 import { NamespaceConstruct } from './namespace-construct';
 
 export class ServiceAccountConstruct extends Construct {
@@ -28,7 +28,7 @@ export class ServiceAccountConstruct extends Construct {
 }
 
 export interface ServiceAccountConstructProps {
-    cluster: ICluster
+    cluster: Cluster | FargateCluster
     name: string
     namespaceConstruct: NamespaceConstruct
 }

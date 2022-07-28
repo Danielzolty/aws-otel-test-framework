@@ -1,5 +1,5 @@
 import { Construct } from 'constructs';
-import { ICluster } from 'aws-cdk-lib/aws-eks';
+import { Cluster, FargateCluster } from 'aws-cdk-lib/aws-eks';
 import { NamespaceConstruct } from './namespace-construct';
 import { GRPCServiceConstruct } from './grpc-service-construct';
 import { ServiceAccountConstruct } from './service-account-construct';
@@ -14,8 +14,6 @@ export class GeneralAOCDeploymentConstruct extends Construct{
     constructor(scope: Construct, id: string, props: GeneralAOCDeploymentConstructProps) {
         super(scope, id);
         const aocAppLabel = 'aoc'
-        const aocConfigMapName = 'otel-config'
-        const aocConfigPath = 'aoc-config.yml'
 
         if (props.deployGRPCService){
             if (props.grpcServiceName == undefined) {
@@ -41,7 +39,6 @@ export class GeneralAOCDeploymentConstruct extends Construct{
 
         const aocConfigMapConstruct = new AOCConfigMapConstruct(this, 'aoc-config-map-construct', {
             cluster: props.cluster,
-            name: aocConfigMapName,
             namespaceConstruct: props.namespaceConstruct,
             aocConfig: props.aocConfig
         })
@@ -57,7 +54,7 @@ export class GeneralAOCDeploymentConstruct extends Construct{
 }
 
 export interface GeneralAOCDeploymentConstructProps {
-    cluster: ICluster
+    cluster: Cluster | FargateCluster
     namespaceConstruct: NamespaceConstruct
     deployGRPCService: boolean
     grpcServiceName?: string

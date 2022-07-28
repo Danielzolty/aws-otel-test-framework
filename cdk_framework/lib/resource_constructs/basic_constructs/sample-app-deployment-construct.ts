@@ -1,5 +1,5 @@
 import { Construct } from 'constructs';
-import { ICluster } from 'aws-cdk-lib/aws-eks';
+import { Cluster, FargateCluster } from 'aws-cdk-lib/aws-eks';
 import { PushModeSampleAppDeploymentConstruct } from './push-mode-sample-app-construct';
 import { PullModeSampleAppDeploymentConstruct } from '../other_constructs/pull-mode-sample-app-construct';
 import { NamespaceConstruct } from './namespace-construct';
@@ -35,7 +35,7 @@ export class SampleAppDeploymentConstruct extends Construct {
 }
 
 export interface SampleAppDeploymentConstructProps {
-    cluster: ICluster
+    cluster: Cluster | FargateCluster
     namespaceConstruct: NamespaceConstruct
     sampleAppLabel: string
     sampleAppImageURL: string

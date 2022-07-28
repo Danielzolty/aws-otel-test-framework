@@ -1,5 +1,5 @@
 import { Construct } from 'constructs';
-import { ICluster } from 'aws-cdk-lib/aws-eks';
+import { Cluster, FargateCluster } from 'aws-cdk-lib/aws-eks';
 import { AOCConfigMapConstruct } from './aoc-config-map-construct';
 import { NamespaceConstruct } from './namespace-construct';
 import { ServiceAccountConstruct } from './service-account-construct';
@@ -132,7 +132,7 @@ export class AOCDeploymentConstruct extends Construct {
 }
 
 export interface AOCDeploymentConstructProps {
-    cluster: ICluster
+    cluster: Cluster | FargateCluster
     namespaceConstruct: NamespaceConstruct
     aocAppLabel: string
     serviceAccountConstruct: ServiceAccountConstruct

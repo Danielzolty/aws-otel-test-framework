@@ -2,11 +2,9 @@ import 'source-map-support/register';
 import * as cdk from 'aws-cdk-lib';
 import { ClusterStack } from './stacks/cluster-stack';
 import { validateTestcaseConfig } from './utils/validate';
-import { readFileSync} from 'fs';
+import { readFileSync } from 'fs';
 const yaml = require('js-yaml')
-import { NamespaceConstruct } from './resource_constructs/basic_constructs/namespace-construct';
-import { SampleAppDeploymentConstruct } from './resource_constructs/basic_constructs/sample-app-deployment-construct';
-import { GeneralAOCDeploymentConstruct } from './resource_constructs/basic_constructs/general-aoc-deployment-construct';
+import { TestCaseResourceDeploymentConstruct } from './resource_constructs/basic_constructs/test-case-resource-deployment-construct';
 
 
 export function deployResources(app: cdk.App, clusterStackMap: Map <string, ClusterStack>) {
@@ -32,57 +30,21 @@ export function deployResources(app: cdk.App, clusterStackMap: Map <string, Clus
     if (region == undefined) {
         throw new Error ('Region environment variable not set')
     }
-    var clusterName = testcaseConfig['clusterName']
-    var clusterStack = clusterStackMap.get(clusterName)
+    const clusterName = testcaseConfig['clusterName']
+    const clusterStack = clusterStackMap.get(clusterName)
     if (clusterStack == undefined) {
         throw Error('Cluster name "' + clusterName + '" does not reference an existing cluster')
     }
-    var cluster = clusterStack.cluster
-    var sampleAppImageURL = testcaseConfig['sampleAppImageURL']
-    var sampleAppMode = testcaseConfig['sampleAppMode']
-    var aocConfig = testcaseConfig['aocConfig']
+    const cluster = clusterStack.cluster
+    const sampleAppImageURL = testcaseConfig['sampleAppImageURL']
+    const sampleAppMode = testcaseConfig['sampleAppMode']
+    const aocConfig = testcaseConfig['aocConfig']
 
-
-    // the testing ID should be a unique random value
-    const testingID = 1
-    const namespaceName = `aoc-namespace-${testingID}`
-    const grpcServiceName = 'aoc-grpc'
-    const grpcPort = 4317
-    const sampleAppLabel = 'sample-app'
-    // TODO: This should really be encapsulated within generalAOCDeploymentConstruct
-    // it's here now because it's coupled with testingID
-    const serviceAccountName = `aoc-service-account-${testingID}`
-
-
-    // deploy resources
-
-    // add Namespace resource
-    const aocNamespaceConstruct = new NamespaceConstruct(clusterStack, 'aoc-namespace-construct', {
+    new TestCaseResourceDeploymentConstruct(clusterStack, 'test-case-resource-deployment-construct', {
         cluster: cluster,
-        name: namespaceName
-    })
-
-    // add Sample App resource
-    const sampleAppDeploymentConstruct = new SampleAppDeploymentConstruct(clusterStack, 'sample-app-deployment-construct', {
-        cluster: cluster,
-        namespaceConstruct: aocNamespaceConstruct,
-        sampleAppLabel: sampleAppLabel,
         sampleAppImageURL: sampleAppImageURL,
         sampleAppMode: sampleAppMode,
-        grpcServiceName: grpcServiceName,
-        grpcPort: grpcPort,
-        region: region
-    })
-
-    const deployGRPCService = sampleAppMode === 'push'
-    const generalAOCDeploymentConstruct = new GeneralAOCDeploymentConstruct(clusterStack, 'general-aoc-deployment-construct', {
-        cluster: cluster,
-        namespaceConstruct: aocNamespaceConstruct,
-        deployGRPCService: deployGRPCService,
-        grpcServiceName: grpcServiceName,
-        //TODO what does this evaluate to when no port is passed?
-        grpcPort: grpcPort,
-        serviceAccountName: serviceAccountName,
+        region: region,
         aocConfig: aocConfig
     })
 }
