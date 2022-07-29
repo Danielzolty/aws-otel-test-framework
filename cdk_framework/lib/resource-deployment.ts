@@ -1,7 +1,7 @@
 import 'source-map-support/register';
 import * as cdk from 'aws-cdk-lib';
 import { ClusterStack } from './stacks/cluster-stack';
-import { validateTestcaseConfig } from './utils/validate';
+import { validateTestcaseConfig } from './utils/validate-testcase-config';
 import { readFileSync } from 'fs';
 const yaml = require('js-yaml')
 import { TestCaseResourceDeploymentConstruct } from './resource_constructs/basic_constructs/test-case-resource-deployment-construct';
@@ -22,7 +22,7 @@ export function deployResources(app: cdk.App, clusterStackMap: Map <string, Clus
     // load the data from the file
     const raw = readFileSync(testcaseConfigRoute, {encoding: 'utf-8'})
     const data = yaml.load(raw)
-    validateTestcaseConfig(data)
+    validateTestcaseConfig(data, clusterStackMap)
     const testcaseConfig = data['testcase']
 
     // load the scope and the props for the resources

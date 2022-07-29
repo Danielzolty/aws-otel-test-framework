@@ -43,15 +43,6 @@ export function validateClusterConfig(info: Object){
     }
 }
 
-export function validateTestcaseConfig(info: Object){
-    const data = Object(info)
-    if (!data['testcase']) {
-        throw new Error('No testcase field in the yaml file')
-    }
-    const testCaseConfig = data['testcase']
-    // TODO
-}
-
 
 function validateVersion(version: string){
     
