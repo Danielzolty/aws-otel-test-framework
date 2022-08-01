@@ -1,5 +1,6 @@
 import { Construct } from 'constructs';
-import { ICluster } from 'aws-cdk-lib/aws-eks';
+import { Cluster, FargateCluster } from 'aws-cdk-lib/aws-eks';
+import { NamespaceConstruct } from '../basic_constructs/namespace-construct';
 
 
 export class aocServiceDeployConstruct extends Construct{
@@ -8,10 +9,10 @@ export class aocServiceDeployConstruct extends Construct{
         const aocServiceDeployManifest = {
             kind: 'Service',
             yamlBody: templatefile('./container-insights-agent/aoc_service_fargate.yml', { Namespace : tolist(aws_eks_fargate_profile.test_profile[count.index].selector)[0].namespace }),
-            dependsOn: [
-                kubectl_manifest.config_map,
-                aws_eks_fargate_profile.test_profile
-            ]
+            // dependsOn: [
+            //     kubectl_manifest.config_map,
+            //     aws_eks_fargate_profile.test_profile
+            // ]
         }
 
         props.cluster.addManifest('aoc-service-deploy', aocServiceDeployManifest)
@@ -19,5 +20,6 @@ export class aocServiceDeployConstruct extends Construct{
 }
 
 export interface aocServiceDeployConstructProps {
-    cluster: ICluster;
+    cluster: Cluster | FargateCluster
+    namespaceConstruct: NamespaceConstruct
 }

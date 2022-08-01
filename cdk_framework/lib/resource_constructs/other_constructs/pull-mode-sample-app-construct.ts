@@ -1,24 +1,25 @@
 import { Construct } from 'constructs';
-import { ICluster } from 'aws-cdk-lib/aws-eks';
-import { AOCNamespaceConstruct } from '../basic_constructs/namespace-construct';
+import { Cluster, FargateCluster } from 'aws-cdk-lib/aws-eks';
+import { NamespaceConstruct } from '../basic_constructs/namespace-construct';
 
 
 export class PullModeSampleAppDeploymentConstruct extends Construct {
-    sampleAppLabelSelector: string
     pullModeSampleAppDeployment: Construct
 
     constructor(scope: Construct, id: string, props: PullModeSampleAppDeploymentConstructProps) {
         super(scope, id);
+
+        const listenAddressHost = '0.0.0.0'
+        const listenAddressPort = 8080
         
-        this.sampleAppLabelSelector = 'sample-app'
         const pullModeAppManifest = {
             kind: 'Deployment',
             
             metadata: {
-                name: this.sampleAppLabelSelector,
-                namespace: props.aocNamespaceConstruct.name,
+                name: 'sample-app',
+                namespace: props.namespaceConstruct.name,
                 labels: {
-                    app: this.sampleAppLabelSelector
+                    name: 'sample-app',
                 }
             },
 
@@ -27,37 +28,36 @@ export class PullModeSampleAppDeploymentConstruct extends Construct {
 
                 selector: {
                     matchLabels: {
-                        app: this.sampleAppLabelSelector
+                        app: props.sampleAppLabelSelector
                     }
                 },
 
                 template: {
                     metadata: {
                         labels: {
-                            app: this.sampleAppLabelSelector
+                            app: props.sampleAppLabelSelector
                         }
                     },
 
                     spec: {
-                        //sample app
                         container: {
-                            name: this.sampleAppLabelSelector,
-                            image: local.eks_pod_config['image'],
+                            name: 'sample-app',
+                            image: props.sampleAppImageURL,
                             imagePullPolicy: 'Always',
-                            command: length(local.eks_pod_config['command']) != 0 ? local.eks_pod_config['command'] : null,
-                            args: length(local.eks_pod_config['args']) != 0 ? local.eks_pod_config['args'] : null,
+                            command: null,
+                            args: null,
                             env: [
                                 {
                                     name: 'AWS_REGION',
-                                    value: var.region
+                                    value: props.region
                                 },
                                 {
                                     name: 'INSTANCE_ID',
-                                    value: var.testing_id
+                                    value: '1'
                                 },
                                 {
                                     name: 'LISTEN_ADDRESS',
-                                    value: '${var.sample_app.listen_address_ip}:${var.sample_app.listen_address_port}'
+                                    value: `${listenAddressHost}:${listenAddressPort}`
                                 }
                             ],
 
@@ -71,7 +71,7 @@ export class PullModeSampleAppDeploymentConstruct extends Construct {
                             readiness_probe: {
                                 http_get: {
                                     path: '/',
-                                    port: var.sample_app.listen_address_port
+                                    port: `${listenAddressPort}`
                                 },
                                 initialDelaySeconds: 10,
                                 periodSeconds: 5
@@ -87,6 +87,9 @@ export class PullModeSampleAppDeploymentConstruct extends Construct {
 }
 
 export interface PullModeSampleAppDeploymentConstructProps {
-      cluster: ICluster
-      aocNamespaceConstruct: AOCNamespaceConstruct
+    cluster: Cluster | FargateCluster
+    namespaceConstruct: NamespaceConstruct
+    sampleAppLabelSelector: string
+    sampleAppImageURL: string
+    region: string
 }

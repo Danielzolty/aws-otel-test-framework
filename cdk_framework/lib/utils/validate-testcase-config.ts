@@ -36,8 +36,8 @@ function validateValue(key: string, value: any, clusterStackMap: Map <string, Cl
     }
     switch (key){
         case 'clusterName':
-            if (clusterStackMap.get(key) == undefined) {
-                throw Error(`Cluster name ${key} does not reference an existing cluster`)
+            if (clusterStackMap.get(value) == undefined) {
+                throw Error(`Cluster name ${value} does not reference an existing cluster`)
             }
             break
         case 'sampleAppMode':

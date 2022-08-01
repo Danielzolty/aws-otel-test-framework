@@ -11,9 +11,7 @@ export class PushModeSampleAppDeploymentConstruct extends Construct {
 
          // configs
          // Using hard-coded values ultimately from push_mode_samples.tf and output.tf (assuming not adot operator)
-        const udpPort = 55690
         const listenAddressPort = 8080
-        const httpPort = 4318
 
         const pushModeSampleAppDeploymentManifest = {
             apiVersion: 'apps/v1',
@@ -69,12 +67,12 @@ export class PushModeSampleAppDeploymentConstruct extends Construct {
                                     {
                                         name: 'COLLECTOR_UDP_ADDRESS',
                                         // value: '${kubernetes_service.aoc_udp_service[0].metadata[0].name}:${var.aoc_service.udp_port}'
-                                        value: `aoc-udp:${udpPort}`
+                                        value: `${props.udpServiceName}:${props.udpPort}`
                                     },
                                     {
                                         name: 'AWS_XRAY_DAEMON_ADDRESS',
                                         //value: '${kubernetes_service.aoc_udp_service[0].metadata[0].name}:${var.aoc_service.udp_port}'
-                                        value: `aoc-udp:${udpPort}`
+                                        value: `${props.udpServiceName}:${props.udpPort}`
                                     },
                                     {
                                         name: 'AWS_REGION',
@@ -94,17 +92,17 @@ export class PushModeSampleAppDeploymentConstruct extends Construct {
                                     {
                                         name: 'LISTEN_ADDRESS',
                                         //value: '${var.sample_app.listen_address_ip}:${var.sample_app.listen_address_port}'
-                                        value: `0.0.0.0:${listenAddressPort}`
+                                        value: `${props.listenAddressHost}:${props.listenAddressPort}`
                                     },
                                     {
                                         name: 'JAEGER_RECEIVER_ENDPOINT',
                                         // value: '${kubernetes_service.aoc_tcp_service[0].metadata[0].name}:${var.aoc_service.http_port}'
-                                        value: `aoc-tcp:${httpPort}`
+                                        value: `${props.tcpServiceName}:${props.httpPort}`
                                     },
                                     {
                                         name: 'ZIPKIN_RECEIVER_ENDPOINT',
                                         // value: '${kubernetes_service.aoc_tcp_service[0].metadata[0].name}:${var.aoc_service.http_port}'
-                                        value: `aoc-tcp:${httpPort}`
+                                        value: `${props.tcpServiceName}:${props.httpPort}`
                                     },
                                     {
                                         name: 'OTEL_METRICS_EXPORTER',
@@ -148,4 +146,10 @@ export interface PushModeSampleAppDeploymentConstructProps {
       region: string
       grpcServiceName: string
       grpcPort: number
+      udpServiceName: string
+      udpPort: number
+      tcpServiceName: string
+      httpPort: number
+      listenAddressHost: string
+      listenAddressPort: number
 }

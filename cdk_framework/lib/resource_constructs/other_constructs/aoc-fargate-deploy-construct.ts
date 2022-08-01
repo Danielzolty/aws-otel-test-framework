@@ -1,5 +1,6 @@
 import { Construct } from 'constructs';
-import { ICluster } from 'aws-cdk-lib/aws-eks';
+import { Cluster, FargateCluster } from 'aws-cdk-lib/aws-eks';
+import { NamespaceConstruct } from '../basic_constructs/namespace-construct';
 
 export class aocFargateDeployConstruct extends Construct{
     constructor(scope: Construct, id: string, props: aocFargateDeployConstructProps){
@@ -15,10 +16,10 @@ export class aocFargateDeployConstruct extends Construct{
                                             Namespace : tolist(aws_eks_fargate_profile.test_profile[count.index].selector)[0].namespace
                                         }
                                   )
-            dependsOn: [
-              kubectl_manifest.aoc_service_deploy,
-              aws_eks_fargate_profile.test_profile
-            ]
+            // dependsOn: [
+            //   kubectl_manifest.aoc_service_deploy,
+            //   aws_eks_fargate_profile.test_profile
+            // ]
         }
 
         props.cluster.addManifest('aoc-fargate-deploy', aocFargateDeployManifest)
@@ -26,5 +27,6 @@ export class aocFargateDeployConstruct extends Construct{
 }
 
 export interface aocFargateDeployConstructProps {
-    cluster: ICluster;
+    cluster: Cluster | FargateCluster
+    namespaceConstruct: NamespaceConstruct
 }

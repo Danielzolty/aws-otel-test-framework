@@ -19,12 +19,18 @@ export class SampleAppDeploymentConstruct extends Construct {
                 sampleAppImageURL: props.sampleAppImageURL,
                 grpcServiceName: props.grpcServiceName,
                 grpcPort: props.grpcPort,
-                region: props.region
+                udpServiceName: props.udpServiceName,
+                udpPort: props.udpPort,
+                tcpServiceName: props.tcpServiceName,
+                httpPort: props.httpPort,
+                listenAddressHost: props.listenAddressHost,
+                listenAddressPort: props.listenAddressPort,
+                region: props.region,
             })
             this.sampleAppDeployment = pushModeSampleAppDeploymentConstruct.pushModeSampleAppDeployment
          }
         //  else if (props.sampleAppMode === 'pull'){
-        //     const pullModeSampleAppDeploymentConstruct = new PullModeSampleAppDeploymentConstruct(this, 'push-mode-sample-app-construct', {
+        //     const pullModeSampleAppDeploymentConstruct = new PullModeSampleAppDeploymentConstruct(this, 'pull-mode-sample-app-construct', {
         //        cluster: props.cluster,
         //        aocNamespaceConstruct: props.aocNamespaceConstruct
         //     })
@@ -42,5 +48,11 @@ export interface SampleAppDeploymentConstructProps {
     sampleAppMode: string
     grpcServiceName: string
     grpcPort: number
+    udpServiceName: string
+    udpPort: number
+    tcpServiceName: string
+    httpPort: number
+    listenAddressHost: string
+    listenAddressPort: number
     region: string
 }

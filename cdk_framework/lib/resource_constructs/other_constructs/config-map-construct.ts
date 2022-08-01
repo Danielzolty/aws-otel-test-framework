@@ -1,7 +1,10 @@
 import { Construct } from 'constructs';
-import { ICluster } from 'aws-cdk-lib/aws-eks';
+import { Cluster, FargateCluster } from 'aws-cdk-lib/aws-eks';
+import { NamespaceConstruct } from '../basic_constructs/namespace-construct';
 
 export class ConfigMapConstruct extends Construct{
+    configMap: Construct
+
     constructor(scope: Construct, id: string, props: ConfigMapConstructProps) {
         super(scope, id);
         const configMapManifest = {
@@ -18,10 +21,11 @@ export class ConfigMapConstruct extends Construct{
             
             // dependsOn: [aws_eks_fargate_profile.test_profile]
         }
-        props.cluster.addManifest('config-map', configMapManifest)
+        this.configMap = props.cluster.addManifest('config-map', configMapManifest)
     }
 }
 
 export interface ConfigMapConstructProps {
-    cluster: ICluster;
+    cluster: Cluster | FargateCluster
+    namespaceConstruct: NamespaceConstruct
 }

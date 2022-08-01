@@ -1,5 +1,6 @@
 import { Construct } from 'constructs';
-import { ICluster } from 'aws-cdk-lib/aws-eks';
+import { Cluster, FargateCluster } from 'aws-cdk-lib/aws-eks';
+import { NamespaceConstruct } from '../basic_constructs/namespace-construct';
 
 
 export class ClusterRoleConstruct extends Construct{
@@ -16,5 +17,5 @@ export class ClusterRoleConstruct extends Construct{
 }
 
 export interface ClusterRoleConstructProps {
-    cluster: ICluster;
+    cluster: Cluster | FargateCluster
 }
