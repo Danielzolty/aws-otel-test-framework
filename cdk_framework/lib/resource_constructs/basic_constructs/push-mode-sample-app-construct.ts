@@ -143,6 +143,8 @@ export interface PushModeSampleAppDeploymentConstructProps {
       namespaceConstruct: NamespaceConstruct
       sampleAppLabelSelector: string
       sampleAppImageURL: string
+      listenAddressHost: string
+      listenAddressPort: number
       region: string
       grpcServiceName: string
       grpcPort: number
@@ -150,6 +152,4 @@ export interface PushModeSampleAppDeploymentConstructProps {
       udpPort: number
       tcpServiceName: string
       httpPort: number
-      listenAddressHost: string
-      listenAddressPort: number
 }

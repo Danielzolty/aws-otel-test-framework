@@ -1,6 +1,6 @@
 import { Construct } from 'constructs';
 import { Cluster, FargateCluster } from 'aws-cdk-lib/aws-eks';
-import { NamespaceConstruct } from '../basic_constructs/namespace-construct';
+import { NamespaceConstruct } from './namespace-construct';
 
 
 export class PullModeSampleAppDeploymentConstruct extends Construct {
@@ -8,10 +8,6 @@ export class PullModeSampleAppDeploymentConstruct extends Construct {
 
     constructor(scope: Construct, id: string, props: PullModeSampleAppDeploymentConstructProps) {
         super(scope, id);
-
-        const listenAddressHost = '0.0.0.0'
-        const listenAddressPort = 8080
-        
         const pullModeAppManifest = {
             kind: 'Deployment',
             
@@ -57,7 +53,7 @@ export class PullModeSampleAppDeploymentConstruct extends Construct {
                                 },
                                 {
                                     name: 'LISTEN_ADDRESS',
-                                    value: `${listenAddressHost}:${listenAddressPort}`
+                                    value: `${props.listenAddressHost}:${props.listenAddressPort}`
                                 }
                             ],
 
@@ -71,11 +67,11 @@ export class PullModeSampleAppDeploymentConstruct extends Construct {
                             readiness_probe: {
                                 http_get: {
                                     path: '/',
-                                    port: `${listenAddressPort}`
+                                    port: `${props.listenAddressPort}`
                                 },
                                 initialDelaySeconds: 10,
                                 periodSeconds: 5
-                            } 
+                            }
                         }
                     }
                 }
@@ -91,5 +87,7 @@ export interface PullModeSampleAppDeploymentConstructProps {
     namespaceConstruct: NamespaceConstruct
     sampleAppLabelSelector: string
     sampleAppImageURL: string
+    listenAddressHost: string
+    listenAddressPort: number
     region: string
 }

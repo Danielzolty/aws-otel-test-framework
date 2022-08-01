@@ -1,8 +1,8 @@
 import { Construct } from 'constructs';
 import { Cluster, FargateCluster } from 'aws-cdk-lib/aws-eks';
 import { NamespaceConstruct } from './namespace-construct';
-import { SampleAppDeploymentConstruct } from './sample-app-deployment-construct';
-import { GeneralAOCDeploymentConstruct } from './general-aoc-deployment-construct';
+import { SampleAppDeploymentConstruct, SampleAppDeploymentConstructProps } from './sample-app-deployment-construct';
+import { GeneralAOCDeploymentConstruct, GeneralAOCDeploymentConstructProps } from './general-aoc-deployment-construct';
 
 export class TestCaseResourceDeploymentConstruct extends Construct {
     name: string
@@ -18,45 +18,55 @@ export class TestCaseResourceDeploymentConstruct extends Construct {
             name: namespaceName
         })
 
-        // sample app deployment
-        const sampleAppLabel = 'sample-app'
+        // used for when sample app is push mode
+        const deployServices = props.sampleAppMode === 'push'
         const grpcServiceName = 'aoc-grpc'
         const grpcPort = 4317
         const udpServiceName = 'aoc-udp'
         const udpPort = 55690
-        const tcpServiceName = 'tcp-udp'
+        const tcpServiceName = 'aoc-tcp'
         const httpPort = 4318
+
+        // sample app deployment
+        const sampleAppLabel = 'sample-app'
         const listenAddressHost = '0.0.0.0'
         const listenAddressPort = 8080
-        const sampleAppDeploymentConstruct = new SampleAppDeploymentConstruct(this, 'sample-app-deployment-construct', {
+        const sampleAppDeploymentConstructProps : SampleAppDeploymentConstructProps = {
             cluster: props.cluster,
             namespaceConstruct: aocNamespaceConstruct,
             sampleAppLabel: sampleAppLabel,
             sampleAppImageURL: props.sampleAppImageURL,
             sampleAppMode: props.sampleAppMode,
-            grpcServiceName: grpcServiceName,
-            grpcPort: grpcPort,
-            udpServiceName: udpServiceName,
-            udpPort: udpPort,
-            tcpServiceName: tcpServiceName,
-            httpPort: httpPort,
             listenAddressHost: listenAddressHost,
             listenAddressPort: listenAddressPort,
             region: props.region
-        })
+        }
+        if (deployServices){
+            sampleAppDeploymentConstructProps.grpcServiceName = grpcServiceName
+            sampleAppDeploymentConstructProps.grpcPort = grpcPort
+            sampleAppDeploymentConstructProps.udpServiceName = udpServiceName
+            sampleAppDeploymentConstructProps.udpPort = udpPort
+            sampleAppDeploymentConstructProps.tcpServiceName = tcpServiceName
+            sampleAppDeploymentConstructProps.httpPort = httpPort
+        }
+        const sampleAppDeploymentConstruct = new SampleAppDeploymentConstruct(this, 'sample-app-deployment-construct', sampleAppDeploymentConstructProps)
 
         // general AOC deployment
-        const deployGRPCService = props.sampleAppMode === 'push'
-        const serviceAccountName = `aoc-service-account`
-        const generalAOCDeploymentConstruct = new GeneralAOCDeploymentConstruct(this, 'general-aoc-deployment-construct', {
+        const generaAOCDeploymentConstructProps : GeneralAOCDeploymentConstructProps = {
             cluster: props.cluster,
             namespaceConstruct: aocNamespaceConstruct,
-            deployGRPCService: deployGRPCService,
-            grpcServiceName: grpcServiceName,
-            grpcPort: grpcPort,
-            serviceAccountName: serviceAccountName,
-            aocConfig: props.aocConfig
-        })
+            aocConfig: props.aocConfig,
+            deployServices: deployServices
+        }
+        if (deployServices) {
+            generaAOCDeploymentConstructProps.grpcServiceName = grpcServiceName
+            generaAOCDeploymentConstructProps.grpcPort = grpcPort
+            generaAOCDeploymentConstructProps.udpServiceName = udpServiceName
+            generaAOCDeploymentConstructProps.udpPort= udpPort,
+            generaAOCDeploymentConstructProps.tcpServiceName = tcpServiceName
+            generaAOCDeploymentConstructProps.httpPort = httpPort
+        }
+        const generalAOCDeploymentConstruct = new GeneralAOCDeploymentConstruct(this, 'general-aoc-deployment-construct', generaAOCDeploymentConstructProps)
     }
 }
 
