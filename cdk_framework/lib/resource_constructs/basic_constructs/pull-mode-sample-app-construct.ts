@@ -1,6 +1,6 @@
 import { Construct } from 'constructs';
 import { Cluster, FargateCluster } from 'aws-cdk-lib/aws-eks';
-import { NamespaceConstruct } from '../universal_constructs/namespace-construct';
+import { NamespaceConstruct } from './namespace-construct';
 
 
 export class PullModeSampleAppDeploymentConstruct extends Construct {
@@ -24,14 +24,14 @@ export class PullModeSampleAppDeploymentConstruct extends Construct {
 
                 selector: {
                     matchLabels: {
-                        app: props.sampleAppLabel
+                        app: props.sampleAppLabelSelector
                     }
                 },
 
                 template: {
                     metadata: {
                         labels: {
-                            app: props.sampleAppLabel
+                            app: props.sampleAppLabelSelector
                         }
                     },
 
@@ -85,7 +85,8 @@ export class PullModeSampleAppDeploymentConstruct extends Construct {
 export interface PullModeSampleAppDeploymentConstructProps {
     cluster: Cluster | FargateCluster
     namespaceConstruct: NamespaceConstruct
-    sampleAppLabel: string
+    sampleAppLabelSelector: string
+    sampleAppImageURL: string
     listenAddressHost: string
     listenAddressPort: number
     region: string

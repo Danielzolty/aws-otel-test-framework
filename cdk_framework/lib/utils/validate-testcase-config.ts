@@ -1,6 +1,6 @@
 import { ClusterStack } from '../stacks/cluster-stack';
 
-const configKeys = new Set(['clusterName', 'baseScenario', 'aocConfig'])
+const configKeys = new Set(['clusterName', 'sampleAppImageURL', 'sampleAppMode', 'aocConfig'])
 
 export function validateTestcaseConfig(info: Object, clusterStackMap: Map <string, ClusterStack>){
     const data = Object(info)
@@ -40,9 +40,9 @@ function validateValue(key: string, value: any, clusterStackMap: Map <string, Cl
                 throw Error(`Cluster name ${value} does not reference an existing cluster`)
             }
             break
-        case 'baseScenario':
-            if (value !== 'otlp' && value !== 'prometheus'){
-                throw new Error(`baseCase must have value "otlp" or "prometheus", "${value}" is invalid`)
+        case 'sampleAppMode':
+            if (value !== 'push' && value !== 'pull'){
+                throw new Error(`sampleAppMode must have value "push" or "push", "${value}" is invalid`)
             }
             break
     }

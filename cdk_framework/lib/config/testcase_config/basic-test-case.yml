@@ -1,7 +1,8 @@
 ---
 testcase:
   clusterName: amdCluster
-  baseScenario: "otlp"
+  sampleAppImageURL: "public.ecr.aws/aws-otel-test/aws-otel-java-spark:latest"
+  sampleAppMode: push
   aocConfig:
     extensions:
       health_check:

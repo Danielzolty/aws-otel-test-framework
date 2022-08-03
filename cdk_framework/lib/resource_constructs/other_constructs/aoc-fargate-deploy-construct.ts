@@ -1,6 +1,6 @@
 import { Construct } from 'constructs';
 import { Cluster, FargateCluster } from 'aws-cdk-lib/aws-eks';
-import { NamespaceConstruct } from '../universal_constructs/namespace-construct';
+import { NamespaceConstruct } from '../basic_constructs/namespace-construct';
 
 export class aocFargateDeployConstruct extends Construct{
     constructor(scope: Construct, id: string, props: aocFargateDeployConstructProps){

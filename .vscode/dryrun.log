@@ -1,0 +1,5 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory `/Users/mayerad/Desktop/git/aws-otel-test-framework'
+cd /Users/mayerad/Desktop/git/aws-otel-test-framework/cmd/aotutil && make build
+make: Leaving directory `/Users/mayerad/Desktop/git/aws-otel-test-framework'
+ 

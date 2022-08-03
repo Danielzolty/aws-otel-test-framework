@@ -1,13 +1,13 @@
 import { Construct } from 'constructs';
 import { Cluster, FargateCluster } from 'aws-cdk-lib/aws-eks';
 import { AOCConfigMapConstruct } from './aoc-config-map-construct';
-import { NamespaceConstruct } from '../universal_constructs/namespace-construct';
-import { ServiceAccountConstruct } from '../universal_constructs/service-account-construct';
+import { NamespaceConstruct } from './namespace-construct';
+import { ServiceAccountConstruct } from './service-account-construct';
 
-export class OTLPAOCDeploymentConstruct extends Construct {
+export class AOCDeploymentConstruct extends Construct {
     aocDeployment: Construct
 
-    constructor(scope: Construct, id: string, props: OTLPAOCDeploymentConstructProps) {
+    constructor(scope: Construct, id: string, props: AOCDeploymentConstructProps) {
         super(scope, id);
 
         const aocConfigMountPath = '/aoc'
@@ -126,13 +126,12 @@ export class OTLPAOCDeploymentConstruct extends Construct {
         
         this.aocDeployment = props.cluster.addManifest('aoc-deployment', aocDeploymentManifest)
         this.aocDeployment.node.addDependency(props.namespaceConstruct.namespace)
-        // Are these dependencies needed?
         this.aocDeployment.node.addDependency(props.serviceAccountConstruct.serviceAccount)
         this.aocDeployment.node.addDependency(props.aocConfigMapConstruct.aocConfigMap)
     }
 }
 
-export interface OTLPAOCDeploymentConstructProps {
+export interface AOCDeploymentConstructProps {
     cluster: Cluster | FargateCluster
     namespaceConstruct: NamespaceConstruct
     aocAppLabel: string

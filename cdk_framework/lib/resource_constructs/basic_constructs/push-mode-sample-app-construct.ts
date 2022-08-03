@@ -1,6 +1,6 @@
 import { Construct } from 'constructs';
 import { Cluster, FargateCluster } from 'aws-cdk-lib/aws-eks';
-import { NamespaceConstruct } from '../universal_constructs/namespace-construct';
+import { NamespaceConstruct } from './namespace-construct';
 
 
 export class PushModeSampleAppDeploymentConstruct extends Construct {
@@ -33,7 +33,7 @@ export class PushModeSampleAppDeploymentConstruct extends Construct {
                 selector: {
                     matchLabels: {
                         // app: local.sample_app_label_selector
-                        app: props.sampleAppLabel
+                        app: props.sampleAppLabelSelector
                     }
                 },
 
@@ -41,7 +41,7 @@ export class PushModeSampleAppDeploymentConstruct extends Construct {
                     metadata: {
                         labels: {
                             // app: local.sample_app_label_selector
-                            app: props.sampleAppLabel
+                            app: props.sampleAppLabelSelector
                         }
                     },
 
@@ -51,7 +51,7 @@ export class PushModeSampleAppDeploymentConstruct extends Construct {
                             {
                                 name: 'sample-app',
                                 //image: local.eks_pod_config['image'],
-                                image: "public.ecr.aws/aws-otel-test/aws-otel-java-spark:latest",
+                                image: props.sampleAppImageURL,
                                 imagePullPolicy: 'Always',
                                 //command: length(local.eks_pod_config['command']) != 0 ? local.eks_pod_config['command'] : null,
                                 command: null,
@@ -141,7 +141,8 @@ export class PushModeSampleAppDeploymentConstruct extends Construct {
 export interface PushModeSampleAppDeploymentConstructProps {
       cluster: Cluster | FargateCluster
       namespaceConstruct: NamespaceConstruct
-      sampleAppLabel: string
+      sampleAppLabelSelector: string
+      sampleAppImageURL: string
       listenAddressHost: string
       listenAddressPort: number
       region: string
