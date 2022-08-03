@@ -9,8 +9,10 @@ export class PullModeSampleAppDeploymentConstruct extends Construct {
     constructor(scope: Construct, id: string, props: PullModeSampleAppDeploymentConstructProps) {
         super(scope, id);
         const pullModeAppManifest = {
+            apiVersion: 'apps/v1',
             kind: 'Deployment',
             
+            // maybe change name to 'pull-mode-sample-app'?
             metadata: {
                 name: 'sample-app',
                 namespace: props.namespaceConstruct.name,
@@ -36,43 +38,45 @@ export class PullModeSampleAppDeploymentConstruct extends Construct {
                     },
 
                     spec: {
-                        container: {
-                            name: 'sample-app',
-                            image: props.sampleAppImageURL,
-                            imagePullPolicy: 'Always',
-                            command: null,
-                            args: null,
-                            env: [
+                        containers: [
                                 {
-                                    name: 'AWS_REGION',
-                                    value: props.region
-                                },
-                                {
-                                    name: 'INSTANCE_ID',
-                                    value: '1'
-                                },
-                                {
-                                    name: 'LISTEN_ADDRESS',
-                                    value: `${props.listenAddressHost}:${props.listenAddressPort}`
-                                }
-                            ],
+                                name: 'sample-app',
+                                image: props.sampleAppImageURL,
+                                imagePullPolicy: 'Always',
+                                command: null,
+                                args: null,
+                                env: [
+                                    {
+                                        name: 'AWS_REGION',
+                                        value: props.region
+                                    },
+                                    {
+                                        name: 'INSTANCE_ID',
+                                        value: '1'
+                                    },
+                                    {
+                                        name: 'LISTEN_ADDRESS',
+                                        value: `${props.listenAddressHost}:${props.listenAddressPort}`
+                                    }
+                                ],
 
-                            resources: {
-                                limits: {
-                                    cpu: '0.2',
-                                    memory: '256Mi'
-                                }
-                            },
-
-                            readiness_probe: {
-                                http_get: {
-                                    path: '/',
-                                    port: `${props.listenAddressPort}`
+                                resources: {
+                                    limits: {
+                                        cpu: '0.2',
+                                        memory: '256Mi'
+                                    }
                                 },
-                                initialDelaySeconds: 10,
-                                periodSeconds: 5
+
+                                readinessProbe: {
+                                    httpGet: {
+                                        path: '/',
+                                        port: props.listenAddressPort
+                                    },
+                                    initialDelaySeconds: 10,
+                                    periodSeconds: 5
+                                }
                             }
-                        }
+                        ]
                     }
                 }
             }

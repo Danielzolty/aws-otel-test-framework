@@ -51,22 +51,22 @@ export class TestCaseResourceDeploymentConstruct extends Construct {
         }
         const sampleAppDeploymentConstruct = new SampleAppDeploymentConstruct(this, 'sample-app-deployment-construct', sampleAppDeploymentConstructProps)
 
-        // general AOC deployment
-        const generaAOCDeploymentConstructProps : GeneralAOCDeploymentConstructProps = {
-            cluster: props.cluster,
-            namespaceConstruct: aocNamespaceConstruct,
-            aocConfig: props.aocConfig,
-            deployServices: deployServices
-        }
-        if (deployServices) {
-            generaAOCDeploymentConstructProps.grpcServiceName = grpcServiceName
-            generaAOCDeploymentConstructProps.grpcPort = grpcPort
-            generaAOCDeploymentConstructProps.udpServiceName = udpServiceName
-            generaAOCDeploymentConstructProps.udpPort= udpPort,
-            generaAOCDeploymentConstructProps.tcpServiceName = tcpServiceName
-            generaAOCDeploymentConstructProps.httpPort = httpPort
-        }
-        const generalAOCDeploymentConstruct = new GeneralAOCDeploymentConstruct(this, 'general-aoc-deployment-construct', generaAOCDeploymentConstructProps)
+        // // general AOC deployment
+        // const generaAOCDeploymentConstructProps : GeneralAOCDeploymentConstructProps = {
+        //     cluster: props.cluster,
+        //     namespaceConstruct: aocNamespaceConstruct,
+        //     aocConfig: props.aocConfig,
+        //     deployServices: deployServices
+        // }
+        // if (deployServices) {
+        //     generaAOCDeploymentConstructProps.grpcServiceName = grpcServiceName
+        //     generaAOCDeploymentConstructProps.grpcPort = grpcPort
+        //     generaAOCDeploymentConstructProps.udpServiceName = udpServiceName
+        //     generaAOCDeploymentConstructProps.udpPort= udpPort,
+        //     generaAOCDeploymentConstructProps.tcpServiceName = tcpServiceName
+        //     generaAOCDeploymentConstructProps.httpPort = httpPort
+        // }
+        // const generalAOCDeploymentConstruct = new GeneralAOCDeploymentConstruct(this, 'general-aoc-deployment-construct', generaAOCDeploymentConstructProps)
     }
 }
 

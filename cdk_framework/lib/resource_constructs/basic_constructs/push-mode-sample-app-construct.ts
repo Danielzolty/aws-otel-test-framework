@@ -11,8 +11,6 @@ export class PushModeSampleAppDeploymentConstruct extends Construct {
 
          // configs
          // Using hard-coded values ultimately from push_mode_samples.tf and output.tf (assuming not adot operator)
-        const listenAddressPort = 8080
-
         const pushModeSampleAppDeploymentManifest = {
             apiVersion: 'apps/v1',
             kind: 'Deployment',
@@ -121,7 +119,7 @@ export class PushModeSampleAppDeploymentConstruct extends Construct {
                                     httpGet: {
                                         path: '/',
                                         //port: var.sample_app.listen_address_port
-                                        port: listenAddressPort
+                                        port: props.listenAddressPort
                                     },
                                     initialDelaySeconds: 10,
                                     periodSeconds: 5

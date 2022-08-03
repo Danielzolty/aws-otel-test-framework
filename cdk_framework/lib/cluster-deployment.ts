@@ -2,10 +2,10 @@
 import 'source-map-support/register';
 import * as cdk from 'aws-cdk-lib';
 import { validateClusterConfig } from './utils/validate';
-import { VPCStack } from './utils/vpc-stack';
+import { VPCStack } from './stacks/vpc-stack';
 import { aws_eks as eks } from 'aws-cdk-lib';
 import { ClusterStack } from './stacks/cluster-stack';
-import { readFileSync} from 'fs';
+import { readFileSync } from 'fs';
 const yaml = require('js-yaml')
 
 
