@@ -1,14 +1,14 @@
 import { Construct } from 'constructs';
 import { Cluster, FargateCluster } from 'aws-cdk-lib/aws-eks';
-import { NamespaceConstruct } from './namespace-construct';
+import { NamespaceConstruct } from '../universal_constructs/namespace-construct';
 
-export class UDPServiceConstruct extends Construct {
-    udpService: Construct
+export class GRPCServiceConstruct extends Construct {
+    grpcService: Construct
 
-    constructor(scope: Construct, id: string, props: UDPConstructProps){
+    constructor(scope: Construct, id: string, props: GRPCConstructProps){
         super(scope, id);
         
-        const udpServiceManifest = {
+        const grpcServiceManifest = {
             apiVersion: 'v1',
             kind: 'Service',
 
@@ -23,23 +23,23 @@ export class UDPServiceConstruct extends Construct {
             
                 ports: [
                     {
-                        port: props.udpPort,
-                        targetPort: props.udpPort,
-                        protocol: 'UDP'
+                        port: props.grpcPort,
+                        targetPort: props.grpcPort,
+                        protocol: 'TCP'
                     }
                 ]
             }
         }
 
-        this.udpService = props.cluster.addManifest(props.name, udpServiceManifest)
-        this.udpService.node.addDependency(props.namespaceConstruct.namespace)
+        this.grpcService = props.cluster.addManifest(props.name, grpcServiceManifest)
+        this.grpcService.node.addDependency(props.namespaceConstruct.namespace)
     }
 }
 
-export interface UDPConstructProps {
+export interface GRPCConstructProps {
     cluster: Cluster | FargateCluster
     name: string
     namespaceConstruct: NamespaceConstruct
     appLabel: string
-    udpPort: number
+    grpcPort: number
 }

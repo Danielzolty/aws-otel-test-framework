@@ -1,14 +1,14 @@
 import { Construct } from 'constructs';
 import { Cluster, FargateCluster } from 'aws-cdk-lib/aws-eks';
-import { NamespaceConstruct } from './namespace-construct';
+import { NamespaceConstruct } from '../universal_constructs/namespace-construct';
 
-export class TCPServiceConstruct extends Construct {
-    tcpService: Construct
+export class UDPServiceConstruct extends Construct {
+    udpService: Construct
 
-    constructor(scope: Construct, id: string, props: TCPConstructProps){
+    constructor(scope: Construct, id: string, props: UDPConstructProps){
         super(scope, id);
         
-        const tcpServiceManifest = {
+        const udpServiceManifest = {
             apiVersion: 'v1',
             kind: 'Service',
 
@@ -23,22 +23,23 @@ export class TCPServiceConstruct extends Construct {
             
                 ports: [
                     {
-                        port: props.httpPort,
-                        targetPort: props.httpPort,
+                        port: props.udpPort,
+                        targetPort: props.udpPort,
+                        protocol: 'UDP'
                     }
                 ]
             }
         }
 
-        this.tcpService = props.cluster.addManifest(props.name, tcpServiceManifest)
-        this.tcpService.node.addDependency(props.namespaceConstruct.namespace)
+        this.udpService = props.cluster.addManifest(props.name, udpServiceManifest)
+        this.udpService.node.addDependency(props.namespaceConstruct.namespace)
     }
 }
 
-export interface TCPConstructProps {
+export interface UDPConstructProps {
     cluster: Cluster | FargateCluster
     name: string
     namespaceConstruct: NamespaceConstruct
     appLabel: string
-    httpPort: number
+    udpPort: number
 }

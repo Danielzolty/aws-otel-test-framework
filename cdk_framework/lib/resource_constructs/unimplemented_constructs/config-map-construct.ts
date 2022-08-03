@@ -1,6 +1,6 @@
 import { Construct } from 'constructs';
 import { Cluster, FargateCluster } from 'aws-cdk-lib/aws-eks';
-import { NamespaceConstruct } from '../basic_constructs/namespace-construct';
+import { NamespaceConstruct } from '../universal_constructs/namespace-construct';
 
 export class ConfigMapConstruct extends Construct{
     configMap: Construct

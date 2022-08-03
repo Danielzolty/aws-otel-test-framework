@@ -1,14 +1,14 @@
 import { Construct } from 'constructs';
 import { Cluster, FargateCluster } from 'aws-cdk-lib/aws-eks';
-import { NamespaceConstruct } from './namespace-construct';
+import { NamespaceConstruct } from '../universal_constructs/namespace-construct';
 
-export class GRPCServiceConstruct extends Construct {
-    grpcService: Construct
+export class TCPServiceConstruct extends Construct {
+    tcpService: Construct
 
-    constructor(scope: Construct, id: string, props: GRPCConstructProps){
+    constructor(scope: Construct, id: string, props: TCPConstructProps){
         super(scope, id);
         
-        const grpcServiceManifest = {
+        const tcpServiceManifest = {
             apiVersion: 'v1',
             kind: 'Service',
 
@@ -23,23 +23,22 @@ export class GRPCServiceConstruct extends Construct {
             
                 ports: [
                     {
-                        port: props.grpcPort,
-                        targetPort: props.grpcPort,
-                        protocol: 'TCP'
+                        port: props.httpPort,
+                        targetPort: props.httpPort,
                     }
                 ]
             }
         }
 
-        this.grpcService = props.cluster.addManifest(props.name, grpcServiceManifest)
-        this.grpcService.node.addDependency(props.namespaceConstruct.namespace)
+        this.tcpService = props.cluster.addManifest(props.name, tcpServiceManifest)
+        this.tcpService.node.addDependency(props.namespaceConstruct.namespace)
     }
 }
 
-export interface GRPCConstructProps {
+export interface TCPConstructProps {
     cluster: Cluster | FargateCluster
     name: string
     namespaceConstruct: NamespaceConstruct
     appLabel: string
-    grpcPort: number
+    httpPort: number
 }

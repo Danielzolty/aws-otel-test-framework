@@ -1,9 +1,8 @@
 import { Stack, StackProps, aws_eks as eks, aws_ec2 as ec2} from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import { Vpc } from 'aws-cdk-lib/aws-ec2';
-import { AwsAuth, KubernetesVersion } from 'aws-cdk-lib/aws-eks';
+import { KubernetesVersion } from 'aws-cdk-lib/aws-eks';
 import { Role, ServicePrincipal, ManagedPolicy } from 'aws-cdk-lib/aws-iam';
-import { ICluster } from 'aws-cdk-lib/aws-ecs';
 
 
 export class ClusterStack extends Stack {

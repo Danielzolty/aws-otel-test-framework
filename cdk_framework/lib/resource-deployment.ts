@@ -4,7 +4,7 @@ import { ClusterStack } from './stacks/cluster-stack';
 import { validateTestcaseConfig } from './utils/validate-testcase-config';
 import { readFileSync } from 'fs';
 const yaml = require('js-yaml')
-import { TestCaseResourceDeploymentConstruct } from './resource_constructs/basic_constructs/test-case-resource-deployment-construct';
+import { TestCaseResourceDeploymentConstruct } from './resource_constructs/test-case-resource-deployment-construct';
 
 
 export function deployResources(app: cdk.App, clusterStackMap: Map <string, ClusterStack>) {
@@ -36,14 +36,12 @@ export function deployResources(app: cdk.App, clusterStackMap: Map <string, Clus
         throw Error('Cluster name "' + clusterName + '" does not reference an existing cluster')
     }
     const cluster = clusterStack.cluster
-    const sampleAppImageURL = testcaseConfig['sampleAppImageURL']
-    const sampleAppMode = testcaseConfig['sampleAppMode']
+    const baseScenario = testcaseConfig['baseScenario']
     const aocConfig = testcaseConfig['aocConfig']
 
     new TestCaseResourceDeploymentConstruct(clusterStack, 'test-case-resource-deployment-construct', {
         cluster: cluster,
-        sampleAppImageURL: sampleAppImageURL,
-        sampleAppMode: sampleAppMode,
+        baseScenario: baseScenario,
         region: region,
         aocConfig: aocConfig
     })
