@@ -8,6 +8,7 @@ import { TestCaseResourceDeploymentConstruct } from './resource_constructs/basic
 
 
 export function deployResources(app: cdk.App, clusterStackMap: Map <string, ClusterStack>) {
+    const region = process.env.REGION || 'us-west-2'
     // load the file
     const testcaseConfigRoute = process.env.TESTCASE_CONFIG_PATH
     // if no testcase config path is provided, throw error
@@ -25,11 +26,6 @@ export function deployResources(app: cdk.App, clusterStackMap: Map <string, Clus
     validateTestcaseConfig(data, clusterStackMap)
     const testcaseConfig = data['test_case']
 
-    // load the scope and the props for the resources
-    const region = process.env.REGION
-    if (region == undefined) {
-        throw new Error ('Region environment variable not set')
-    }
     const clusterName = testcaseConfig['cluster_name']
     const clusterStack = clusterStackMap.get(clusterName)
     if (clusterStack == undefined) {
