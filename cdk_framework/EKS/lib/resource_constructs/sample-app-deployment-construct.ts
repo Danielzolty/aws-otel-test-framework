@@ -11,7 +11,7 @@ export class SampleAppDeploymentConstruct extends Construct {
     constructor(scope: Construct, id: string, props: SampleAppDeploymentConstructProps){
          super(scope, id);
 
-         if (props.sampleAppMode === 'push'){
+        if (props.sampleAppMode === 'push'){
             if (props.grpcServiceName == undefined) {
                 throw new Error('No GRPC Service name provided')
             }
@@ -46,8 +46,8 @@ export class SampleAppDeploymentConstruct extends Construct {
                 region: props.region
             })
             this.sampleAppDeployment = pushModeSampleAppDeploymentConstruct.pushModeSampleAppDeployment
-         }
-         else if (props.sampleAppMode === 'pull'){
+        }
+        else if (props.sampleAppMode === 'pull'){
             const pullModeSampleAppDeploymentConstruct = new PullModeSampleAppDeploymentConstruct(this, 'pull-mode-sample-app-construct', {
                 cluster: props.cluster,
                 namespaceConstruct: props.namespaceConstruct,
@@ -58,7 +58,7 @@ export class SampleAppDeploymentConstruct extends Construct {
                 region: props.region
             })
            this.sampleAppDeployment = pullModeSampleAppDeploymentConstruct.pullModeSampleAppDeployment
-         }
+        }
     }
 }
 

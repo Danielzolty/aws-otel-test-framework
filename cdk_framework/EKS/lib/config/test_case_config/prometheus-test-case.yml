@@ -13,11 +13,9 @@ test_case:
           - job_name: "test-prometheus-sample-app"
             static_configs:
             - targets: [ 0.0.0.0:8080 ]
-
     exporters:
       logging:
         logLevel: debug
-        
     service:
       pipelines:
         metrics:
