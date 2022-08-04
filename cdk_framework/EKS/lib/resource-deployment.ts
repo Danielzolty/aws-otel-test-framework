@@ -9,6 +9,7 @@ import { TestCaseResourceDeploymentConstruct } from './resource_constructs/basic
 
 export function deployResources(app: cdk.App, clusterStackMap: Map <string, ClusterStack>) {
     const region = process.env.REGION || 'us-west-2'
+    
     // load the file
     const testcaseConfigRoute = process.env.TESTCASE_CONFIG_PATH
     // if no testcase config path is provided, throw error

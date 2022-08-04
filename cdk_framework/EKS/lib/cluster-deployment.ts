@@ -16,7 +16,7 @@ export function deployClusters(app: cdk.App) : Map<string, ClusterStack> {
 
     if (!/(.yml|.yaml)$/.test(route)){
       throw new Error ('Path for cluster configuration must be to a yaml file')
-   }
+    }
 
     const raw = readFileSync(route)
     const configData = yaml.load(raw)

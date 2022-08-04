@@ -1,5 +1,5 @@
 ---
-testcase:
+test_case:
   cluster_name: amdCluster
   sample_app_image_uri: "public.ecr.aws/aws-otel-test/aws-otel-java-spark:latest"
   sample_app_mode: push
