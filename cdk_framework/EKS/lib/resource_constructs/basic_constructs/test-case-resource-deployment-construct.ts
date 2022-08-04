@@ -2,7 +2,7 @@ import { Construct } from 'constructs';
 import { Cluster, FargateCluster } from 'aws-cdk-lib/aws-eks';
 import { NamespaceConstruct } from './namespace-construct';
 import { SampleAppDeploymentConstruct, SampleAppDeploymentConstructProps } from './sample-app-deployment-construct';
-import { GeneralAOCDeploymentConstruct, GeneralAOCDeploymentConstructProps } from './general-aoc-deployment-construct';
+import { GeneralCollectorDeploymentConstruct, GeneralCollectorDeploymentConstructProps } from './general-collector-deployment-construct';
 
 export class TestCaseResourceDeploymentConstruct extends Construct {
     name: string
@@ -12,19 +12,19 @@ export class TestCaseResourceDeploymentConstruct extends Construct {
         super(scope, id);
 
         // namespace deployment
-        const namespaceName = `aoc-namespace`
-        const aocNamespaceConstruct = new NamespaceConstruct(this, 'aoc-namespace-construct', {
+        const namespaceName = `collector-namespace`
+        const collectorNamespaceConstruct = new NamespaceConstruct(this, 'collector-namespace-construct', {
             cluster: props.cluster,
             name: namespaceName
         })
 
         // used for when sample app is push mode
         const deployServices = props.sampleAppMode === 'push'
-        const grpcServiceName = 'aoc-grpc'
+        const grpcServiceName = 'collector-grpc'
         const grpcPort = 4317
-        const udpServiceName = 'aoc-udp'
+        const udpServiceName = 'collector-udp'
         const udpPort = 55690
-        const tcpServiceName = 'aoc-tcp'
+        const tcpServiceName = 'collector-tcp'
         const httpPort = 4318
 
         // sample app deployment
@@ -33,9 +33,9 @@ export class TestCaseResourceDeploymentConstruct extends Construct {
         const listenAddressPort = 8080
         const sampleAppDeploymentConstructProps : SampleAppDeploymentConstructProps = {
             cluster: props.cluster,
-            namespaceConstruct: aocNamespaceConstruct,
+            namespaceConstruct: collectorNamespaceConstruct,
             sampleAppLabel: sampleAppLabel,
-            sampleAppImageURL: props.sampleAppImageURL,
+            sampleAppImageURI: props.sampleAppImageURI,
             sampleAppMode: props.sampleAppMode,
             listenAddressHost: listenAddressHost,
             listenAddressPort: listenAddressPort,
@@ -51,29 +51,29 @@ export class TestCaseResourceDeploymentConstruct extends Construct {
         }
         const sampleAppDeploymentConstruct = new SampleAppDeploymentConstruct(this, 'sample-app-deployment-construct', sampleAppDeploymentConstructProps)
 
-        // // general AOC deployment
-        // const generaAOCDeploymentConstructProps : GeneralAOCDeploymentConstructProps = {
-        //     cluster: props.cluster,
-        //     namespaceConstruct: aocNamespaceConstruct,
-        //     aocConfig: props.aocConfig,
-        //     deployServices: deployServices
-        // }
-        // if (deployServices) {
-        //     generaAOCDeploymentConstructProps.grpcServiceName = grpcServiceName
-        //     generaAOCDeploymentConstructProps.grpcPort = grpcPort
-        //     generaAOCDeploymentConstructProps.udpServiceName = udpServiceName
-        //     generaAOCDeploymentConstructProps.udpPort= udpPort,
-        //     generaAOCDeploymentConstructProps.tcpServiceName = tcpServiceName
-        //     generaAOCDeploymentConstructProps.httpPort = httpPort
-        // }
-        // const generalAOCDeploymentConstruct = new GeneralAOCDeploymentConstruct(this, 'general-aoc-deployment-construct', generaAOCDeploymentConstructProps)
+        // // general Collector deployment
+        const generaCollectorDeploymentConstructProps : GeneralCollectorDeploymentConstructProps = {
+            cluster: props.cluster,
+            namespaceConstruct: collectorNamespaceConstruct,
+            collectorConfig: props.collectorConfig,
+            deployServices: deployServices
+        }
+        if (deployServices) {
+            generaCollectorDeploymentConstructProps.grpcServiceName = grpcServiceName
+            generaCollectorDeploymentConstructProps.grpcPort = grpcPort
+            generaCollectorDeploymentConstructProps.udpServiceName = udpServiceName
+            generaCollectorDeploymentConstructProps.udpPort= udpPort,
+            generaCollectorDeploymentConstructProps.tcpServiceName = tcpServiceName
+            generaCollectorDeploymentConstructProps.httpPort = httpPort
+        }
+        const generalCollectorDeploymentConstruct = new GeneralCollectorDeploymentConstruct(this, 'general-collector-deployment-construct', generaCollectorDeploymentConstructProps)
     }
 }
 
 export interface TestCaseResourceDeploymentConstructProps {
     cluster: Cluster | FargateCluster
-    sampleAppImageURL: string
+    sampleAppImageURI: string
     sampleAppMode: string
     region: string
-    aocConfig: string
+    collectorConfig: string
 }

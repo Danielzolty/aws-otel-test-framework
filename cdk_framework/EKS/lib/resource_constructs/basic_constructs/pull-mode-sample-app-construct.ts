@@ -41,7 +41,7 @@ export class PullModeSampleAppDeploymentConstruct extends Construct {
                         containers: [
                                 {
                                 name: 'sample-app',
-                                image: props.sampleAppImageURL,
+                                image: props.sampleAppImageURI,
                                 imagePullPolicy: 'Always',
                                 command: null,
                                 args: null,
@@ -83,6 +83,7 @@ export class PullModeSampleAppDeploymentConstruct extends Construct {
         }
         
         this.pullModeSampleAppDeployment = props.cluster.addManifest('pull-mode-sample-app', pullModeAppManifest)
+        this.pullModeSampleAppDeployment.node.addDependency(props.namespaceConstruct.namespace)
    }
 }
 
@@ -90,7 +91,7 @@ export interface PullModeSampleAppDeploymentConstructProps {
     cluster: Cluster | FargateCluster
     namespaceConstruct: NamespaceConstruct
     sampleAppLabelSelector: string
-    sampleAppImageURL: string
+    sampleAppImageURI: string
     listenAddressHost: string
     listenAddressPort: number
     region: string

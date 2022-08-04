@@ -1,13 +1,13 @@
 import { ClusterStack } from '../stacks/cluster-stack';
 
-const configKeys = new Set(['clusterName', 'sampleAppImageURL', 'sampleAppMode', 'aocConfig'])
+const configKeys = new Set(['cluster_name', 'sample_app_image_uri', 'sample_app_mode', 'collector_config'])
 
 export function validateTestcaseConfig(info: Object, clusterStackMap: Map <string, ClusterStack>){
     const data = Object(info)
-    if (!data['testcase']) {
-        throw new Error('No testcase field in the yaml file')
+    if (!data['test_case']) {
+        throw new Error('No test_case field in the yaml file')
     }
-    const testCaseConfig = data['testcase']
+    const testCaseConfig = data['test_case']
     const providedKeys = new Set(Object.keys(testCaseConfig))
 
     // validate that all provided keys are valid
@@ -35,12 +35,12 @@ function validateValue(key: string, value: any, clusterStackMap: Map <string, Cl
         throw Error(`No value provided for key ${key}`)
     }
     switch (key){
-        case 'clusterName':
+        case 'cluster_name':
             if (clusterStackMap.get(value) == undefined) {
                 throw Error(`Cluster name ${value} does not reference an existing cluster`)
             }
             break
-        case 'sampleAppMode':
+        case 'sample_app_mode':
             if (value !== 'push' && value !== 'pull'){
                 throw new Error(`sampleAppMode must have value "push" or "push", "${value}" is invalid`)
             }

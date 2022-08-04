@@ -34,7 +34,7 @@ export class SampleAppDeploymentConstruct extends Construct {
                 cluster: props.cluster,
                 namespaceConstruct: props.namespaceConstruct,
                 sampleAppLabelSelector: props.sampleAppLabel,
-                sampleAppImageURL: props.sampleAppImageURL,
+                sampleAppImageURI: props.sampleAppImageURI,
                 grpcServiceName: props.grpcServiceName,
                 grpcPort: props.grpcPort,
                 udpServiceName: props.udpServiceName,
@@ -52,7 +52,7 @@ export class SampleAppDeploymentConstruct extends Construct {
                 cluster: props.cluster,
                 namespaceConstruct: props.namespaceConstruct,
                 sampleAppLabelSelector: props.sampleAppLabel,
-                sampleAppImageURL: props.sampleAppImageURL,
+                sampleAppImageURI: props.sampleAppImageURI,
                 listenAddressHost: props.listenAddressHost,
                 listenAddressPort: props.listenAddressPort,
                 region: props.region
@@ -66,7 +66,7 @@ export interface SampleAppDeploymentConstructProps {
     cluster: Cluster | FargateCluster
     namespaceConstruct: NamespaceConstruct
     sampleAppLabel: string
-    sampleAppImageURL: string
+    sampleAppImageURI: string
     sampleAppMode: string
     listenAddressHost: string
     listenAddressPort: number

@@ -26,8 +26,8 @@
   },
   "exclude": ["cdk.out","build","node_modules", "dist"],
   "include": [
-    "lib/**/*.ts",
-    "lib/*.ts",
+    "EKS/lib/**/*.ts",
+    "EKS/lib/*.ts",
     "config/*.yaml"
   ],
 }

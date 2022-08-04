@@ -3,19 +3,19 @@ import { Cluster, FargateCluster } from 'aws-cdk-lib/aws-eks';
 import { NamespaceConstruct } from './namespace-construct';
 import { GRPCServiceConstruct } from './grpc-service-construct';
 import { ServiceAccountConstruct } from './service-account-construct';
-import { AOCConfigMapConstruct } from './aoc-config-map-construct';
-import { AOCDeploymentConstruct } from './aoc-deployment-construct';
+import { CollectorConfigMapConstruct } from './collector-config-map-construct';
+import { CollectorDeploymentConstruct } from './collector-deployment-construct';
 import { TCPServiceConstruct } from './tcp-service-construct';
 import { UDPServiceConstruct } from './udp-service-construct';
 
 //TODO - Consider renaming. Role is a different Kubernetes kind so 
 // this name is confusing
-export class GeneralAOCDeploymentConstruct extends Construct{
-    aocRole: Construct
+export class GeneralCollectorDeploymentConstruct extends Construct{
+    collectorRole: Construct
 
-    constructor(scope: Construct, id: string, props: GeneralAOCDeploymentConstructProps) {
+    constructor(scope: Construct, id: string, props: GeneralCollectorDeploymentConstructProps) {
         super(scope, id);
-        const aocAppLabel = 'aoc'
+        const collectorAppLabel = 'collector'
 
         if (props.deployServices){
             if (props.grpcServiceName == undefined) {
@@ -40,52 +40,52 @@ export class GeneralAOCDeploymentConstruct extends Construct{
                 cluster: props.cluster,
                 name: props.grpcServiceName,
                 namespaceConstruct: props.namespaceConstruct,
-                appLabel: aocAppLabel,
+                appLabel: collectorAppLabel,
                 grpcPort: props.grpcPort
             })
             const udpServiceConstruct = new UDPServiceConstruct(this, 'udp-service-construct', {
                 cluster: props.cluster,
                 name: props.udpServiceName,
                 namespaceConstruct: props.namespaceConstruct,
-                appLabel: aocAppLabel,
+                appLabel: collectorAppLabel,
                 udpPort: props.udpPort
             })
             const tcoServiceConstruct = new TCPServiceConstruct(this, 'tcp-service-construct', {
                 cluster: props.cluster,
                 name: props.tcpServiceName,
                 namespaceConstruct: props.namespaceConstruct,
-                appLabel: aocAppLabel,
+                appLabel: collectorAppLabel,
                 httpPort: props.httpPort
             })
         }
 
-        const serviceAccountName = `aoc-service-account`
+        const serviceAccountName = `collector-service-account`
         const serviceAccountConstruct = new ServiceAccountConstruct(this, 'service-account-construct', {
             cluster: props.cluster,
             name: serviceAccountName,
             namespaceConstruct: props.namespaceConstruct
         })
 
-        const aocConfigMapConstruct = new AOCConfigMapConstruct(this, 'aoc-config-map-construct', {
+        const collectorConfigMapConstruct = new CollectorConfigMapConstruct(this, 'collector-config-map-construct', {
             cluster: props.cluster,
             namespaceConstruct: props.namespaceConstruct,
-            aocConfig: props.aocConfig
+            collectorConfig: props.collectorConfig
         })
 
-        const aocDeploymentConstruct = new AOCDeploymentConstruct(this, 'aoc-deployment-construct', {
+        const collectorDeploymentConstruct = new CollectorDeploymentConstruct(this, 'collector-deployment-construct', {
             cluster: props.cluster,
             namespaceConstruct: props.namespaceConstruct,
-            aocAppLabel: aocAppLabel,
+            collectorAppLabel: collectorAppLabel,
             serviceAccountConstruct: serviceAccountConstruct,
-            aocConfigMapConstruct: aocConfigMapConstruct
+            collectorConfigMapConstruct: collectorConfigMapConstruct
         })
     }
 }
 
-export interface GeneralAOCDeploymentConstructProps {
+export interface GeneralCollectorDeploymentConstructProps {
     cluster: Cluster | FargateCluster
     namespaceConstruct: NamespaceConstruct
-    aocConfig: string
+    collectorConfig: string
     deployServices: boolean
     grpcServiceName?: string
     grpcPort?: number

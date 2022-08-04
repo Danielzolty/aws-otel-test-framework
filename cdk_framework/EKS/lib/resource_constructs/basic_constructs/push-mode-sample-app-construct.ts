@@ -49,7 +49,7 @@ export class PushModeSampleAppDeploymentConstruct extends Construct {
                             {
                                 name: 'sample-app',
                                 //image: local.eks_pod_config['image'],
-                                image: props.sampleAppImageURL,
+                                image: props.sampleAppImageURI,
                                 imagePullPolicy: 'Always',
                                 //command: length(local.eks_pod_config['command']) != 0 ? local.eks_pod_config['command'] : null,
                                 command: null,
@@ -140,7 +140,7 @@ export interface PushModeSampleAppDeploymentConstructProps {
       cluster: Cluster | FargateCluster
       namespaceConstruct: NamespaceConstruct
       sampleAppLabelSelector: string
-      sampleAppImageURL: string
+      sampleAppImageURI: string
       listenAddressHost: string
       listenAddressPort: number
       region: string
