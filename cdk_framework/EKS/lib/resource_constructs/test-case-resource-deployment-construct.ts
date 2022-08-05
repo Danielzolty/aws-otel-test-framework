@@ -49,7 +49,7 @@ export class TestCaseResourceDeploymentConstruct extends Construct {
             sampleAppDeploymentConstructProps.tcpServiceName = tcpServiceName
             sampleAppDeploymentConstructProps.httpPort = httpPort
         }
-        const sampleAppDeploymentConstruct = new GeneralSampleAppDeploymentConstruct(this, 'general-sample-app-deployment-construct', sampleAppDeploymentConstructProps)
+        new GeneralSampleAppDeploymentConstruct(this, 'general-sample-app-deployment-construct', sampleAppDeploymentConstructProps)
 
         // // general Collector deployment
         const generaCollectorDeploymentConstructProps : GeneralCollectorDeploymentConstructProps = {
@@ -66,7 +66,7 @@ export class TestCaseResourceDeploymentConstruct extends Construct {
             generaCollectorDeploymentConstructProps.tcpServiceName = tcpServiceName
             generaCollectorDeploymentConstructProps.httpPort = httpPort
         }
-        const generalCollectorDeploymentConstruct = new GeneralCollectorDeploymentConstruct(this, 'general-collector-deployment-construct', generaCollectorDeploymentConstructProps)
+        new GeneralCollectorDeploymentConstruct(this, 'general-collector-deployment-construct', generaCollectorDeploymentConstructProps)
     }
 }
 

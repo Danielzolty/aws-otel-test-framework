@@ -16,6 +16,8 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": false,
     "inlineSourceMap": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
     "inlineSources": true,
     "experimentalDecorators": true,
     "strictPropertyInitialization": false,
@@ -26,8 +28,10 @@
   },
   "exclude": ["cdk.out","build","node_modules", "dist"],
   "include": [
-    "EKS/lib/**/*.ts",
-    "EKS/lib/*.ts",
-    "config/*.yaml"
+    "lib/**/*.ts",
+    "**/*.test.ts",
+    "lib/*.ts",
+    "config/*.yaml",
+    ".eslintrc.js"
   ],
 }

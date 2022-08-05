@@ -37,5 +37,5 @@ export class CollectorConfigMapConstruct extends Construct {
 export interface CollectorConfigMapConstructProps {
     cluster: Cluster | FargateCluster
     namespaceConstruct: NamespaceConstruct
-    collectorConfig: Object
+    collectorConfig: any
 }

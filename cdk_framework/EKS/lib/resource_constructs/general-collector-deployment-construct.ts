@@ -36,21 +36,21 @@ export class GeneralCollectorDeploymentConstruct extends Construct{
             if (props.httpPort == undefined) {
                 throw new Error('No HTTP port provided')
             }
-            const grpcServiceConstruct = new GRPCServiceConstruct(this, 'grpc-service-construct', {
+            new GRPCServiceConstruct(this, 'grpc-service-construct', {
                 cluster: props.cluster,
                 name: props.grpcServiceName,
                 namespaceConstruct: props.namespaceConstruct,
                 appLabel: collectorAppLabel,
                 grpcPort: props.grpcPort
             })
-            const udpServiceConstruct = new UDPServiceConstruct(this, 'udp-service-construct', {
+            new UDPServiceConstruct(this, 'udp-service-construct', {
                 cluster: props.cluster,
                 name: props.udpServiceName,
                 namespaceConstruct: props.namespaceConstruct,
                 appLabel: collectorAppLabel,
                 udpPort: props.udpPort
             })
-            const tcoServiceConstruct = new TCPServiceConstruct(this, 'tcp-service-construct', {
+            new TCPServiceConstruct(this, 'tcp-service-construct', {
                 cluster: props.cluster,
                 name: props.tcpServiceName,
                 namespaceConstruct: props.namespaceConstruct,
@@ -72,7 +72,7 @@ export class GeneralCollectorDeploymentConstruct extends Construct{
             collectorConfig: props.collectorConfig
         })
 
-        const collectorDeploymentConstruct = new CollectorDeploymentConstruct(this, 'collector-deployment-construct', {
+        new CollectorDeploymentConstruct(this, 'collector-deployment-construct', {
             cluster: props.cluster,
             namespaceConstruct: props.namespaceConstruct,
             collectorAppLabel: collectorAppLabel,

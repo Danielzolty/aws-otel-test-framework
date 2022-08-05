@@ -24,27 +24,25 @@ export function deployClusters(app: cdk.App) : Map<string, ClusterStack> {
     const eksClusterMap = new Map<string, ClusterStack>();
     
     const vpcStack = new VPCStack(app, 'EKSVpc', {
-      env: {
-        region: REGION
-      }
+        env: {
+            region: REGION
+        }
     })
 
     validateClustersConfig(configData)
     for(const [key, value] of Object.entries(configData['clusters'])){
-      const val = Object(value)
-      const versionKubernetes = eks.KubernetesVersion.of(String(val['version']));
-      const newStack = new ClusterStack(app, key + 'EKSCluster', {
-        launchType: (val['launch_type']),
-        name: key,
-        vpc: vpcStack.vpc,
-        version: versionKubernetes,
-        env: {
-          region: REGION
-        },
-      })
-        
-    
-      eksClusterMap.set(key, newStack)
+        const val = Object(value)
+        const versionKubernetes = eks.KubernetesVersion.of(String(val['version']));
+        const newStack = new ClusterStack(app, key + 'EKSCluster', {
+            launchType: (val['launch_type']),
+            name: key,
+            vpc: vpcStack.vpc,
+            version: versionKubernetes,
+            env: {
+            region: REGION
+            },
+        })
+        eksClusterMap.set(key, newStack)
     }
 
     return eksClusterMap

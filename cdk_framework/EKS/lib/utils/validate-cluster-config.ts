@@ -9,26 +9,26 @@ const requiredFields = new Set(['version', 'launch_type'])
 
 export function validateClustersConfig(info: unknown){
     const data = Object(info)
-    if(!data['clusters']){
+    if (!data['clusters']) {
         throw new Error('No clusters field being filed in the yaml file')
     }
     const clusterInfo = data['clusters']
     const clusterNamesSet = new Set()
-    for(const [key, value] of Object.entries(clusterInfo)){
-        if(Object.keys(Object(value)).length !== 2){
+    for (const [key, value] of Object.entries(clusterInfo)) {
+        if (Object.keys(Object(value)).length !== 2) {
             throw new Error('Did not use proper fields for cluster. You can only have launch_type and version')
         }
         const val = Object(value)
-        if(clusterNamesSet.has(key)){
+        if (clusterNamesSet.has(key)) {
             throw new Error('Cannot have multiple clusters with the samne name')
         }
         clusterNamesSet.add(key)
         validateRequiredFields(val)
-        for(const [k, v] of Object.entries(val)){
-            if(!supportedFields.has(k)){
+        for (const [k, v] of Object.entries(val)) {
+            if (!supportedFields.has(k)) {
                 throw new Error('Incompatible field type')
             }
-            switch(k){
+            switch (k) {
                 case 'version':
                     val[k] = validateVersion(String(v))
                     break;
@@ -41,53 +41,53 @@ export function validateClustersConfig(info: unknown){
 }
 
 function validateRequiredFields(fields: any){
-    for(const field of requiredFields){
-        if(!fields[field]){
+    for(const field of requiredFields) {
+        if (!fields[field]) {
             throw new Error('Required field - ' + field + ' - not provided')
         }
     }
 }
 
 function checkToSetUpDefaults(fields: any){
-    if(!fields['ec2_instance']){
+    if (!fields['ec2_instance']) {
         fields['ec2_instance'] = 'm5'
     }
-    if(!fields['node_size']){
+    if (!fields['node_size']) {
         fields['node_size'] = 'large'
     }
 }
 
 function validateVersion(version: string){
-    
-    if(version === '1.2'){
+    if (version === '1.2') {
         version = '1.20'
     }
-
-    if(!supportedVersions.has(version)){
+    if (!supportedVersions.has(version)) {
         throw new Error('Version needs to be a value of one of the following: ' + Array.from(supportedVersions).join(', '));
     }
+
     return version
 }
 
 function convertAndValidateEC2Instance(instance: string){
-    if(instance === null || !instance || instance == 'null'){
+    if (instance === null || !instance || instance == 'null') {
         throw new Error('EC2 instance type was not provided for ec2 cluster')
     }
     const adjustedType = instance.toLowerCase()
-    if(!supportedCPUArchitectures.has(adjustedType)){
+    if (!supportedCPUArchitectures.has(adjustedType)) {
         throw new Error('Improper instance type or provided faulty ec2_instance/node_size for fargate cluster')
     }
+    
     return adjustedType
 }
 
 function convertAndValidateLaunchType(type: any){
     const launchType = Object(type['launch_type'])
-    if(Object.keys(launchType).length != 1){
+    if (Object.keys(launchType).length != 1) {
         throw new Error('More than 1 launch_type provided or none provided')
     }
     if(launchType['fargate'] !== undefined){
         return launchType
-    } else if(launchType['ec2'] !== undefined){
+    } else if (launchType['ec2'] !== undefined) {
         const launchData = Object(launchType['ec2'])
         checkToSetUpDefaults(launchData)
         for(const [k, v] of Object.entries(launchData)){
@@ -112,13 +112,13 @@ function convertAndValidateLaunchType(type: any){
 }
 
 function validateNodeSize(size: string, instance: string){
-    if(!size || size === null || size === 'null' || size === ''){
+    if (!size || size === null || size === 'null' || size === '') {
         return null
     }
     const adjustedSize = size.toLowerCase()
     const adjustedInstance = convertAndValidateEC2Instance(instance)
 
-    if(adjustedInstance === 't4g'){
+    if (adjustedInstance === 't4g') {
         if(!supportedT4gInstances.has(adjustedSize)){
             throw new Error('Node size is not one of the options listed here https://www.amazonaws.cn/en/ec2/instance-types/')
         }
@@ -127,9 +127,8 @@ function validateNodeSize(size: string, instance: string){
             throw new Error('Node size is not one of the options listed here https://www.amazonaws.cn/en/ec2/instance-types/')
         }
     }
-    
-    return adjustedSize
 
+    return adjustedSize
 }
 
 function addedChecks(val: unknown){
