@@ -1,7 +1,7 @@
 import { Construct } from 'constructs';
 import { Cluster, FargateCluster } from 'aws-cdk-lib/aws-eks';
 import { NamespaceConstruct } from './namespace-construct';
-import { SampleAppDeploymentConstruct, SampleAppDeploymentConstructProps } from './sample-app-deployment-construct';
+import { GeneralSampleAppDeploymentConstruct, GeneralSampleAppDeploymentConstructProps } from './general-sample-app-deployment-construct';
 import { GeneralCollectorDeploymentConstruct, GeneralCollectorDeploymentConstructProps } from './general-collector-deployment-construct';
 
 export class TestCaseResourceDeploymentConstruct extends Construct {
@@ -31,7 +31,7 @@ export class TestCaseResourceDeploymentConstruct extends Construct {
         const sampleAppLabel = 'sample-app'
         const listenAddressHost = '0.0.0.0'
         const listenAddressPort = 8080
-        const sampleAppDeploymentConstructProps : SampleAppDeploymentConstructProps = {
+        const sampleAppDeploymentConstructProps : GeneralCollectorDeploymentConstructProps = {
             cluster: props.cluster,
             namespaceConstruct: collectorNamespaceConstruct,
             sampleAppLabel: sampleAppLabel,
@@ -49,7 +49,7 @@ export class TestCaseResourceDeploymentConstruct extends Construct {
             sampleAppDeploymentConstructProps.tcpServiceName = tcpServiceName
             sampleAppDeploymentConstructProps.httpPort = httpPort
         }
-        const sampleAppDeploymentConstruct = new SampleAppDeploymentConstruct(this, 'sample-app-deployment-construct', sampleAppDeploymentConstructProps)
+        const sampleAppDeploymentConstruct = new GeneralSampleAppDeploymentConstruct(this, 'general-sample-app-deployment-construct', sampleAppDeploymentConstructProps)
 
         // // general Collector deployment
         const generaCollectorDeploymentConstructProps : GeneralCollectorDeploymentConstructProps = {

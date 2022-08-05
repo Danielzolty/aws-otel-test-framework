@@ -5,10 +5,10 @@ import { PullModeSampleAppDeploymentConstruct } from './pull-mode-sample-app-con
 import { NamespaceConstruct } from './namespace-construct';
 
 
-export class SampleAppDeploymentConstruct extends Construct {
+export class GeneralSampleAppDeploymentConstruct extends Construct {
     sampleAppDeployment: Construct
 
-    constructor(scope: Construct, id: string, props: SampleAppDeploymentConstructProps){
+    constructor(scope: Construct, id: string, props: GeneralSampleAppDeploymentConstructProps){
          super(scope, id);
 
         if (props.sampleAppMode === 'push'){
@@ -62,7 +62,7 @@ export class SampleAppDeploymentConstruct extends Construct {
     }
 }
 
-export interface SampleAppDeploymentConstructProps {
+export interface GeneralSampleAppDeploymentConstructProps {
     cluster: Cluster | FargateCluster
     namespaceConstruct: NamespaceConstruct
     sampleAppLabel: string
