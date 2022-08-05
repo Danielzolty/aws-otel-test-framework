@@ -14,10 +14,10 @@ export class PullModeSampleAppDeploymentConstruct extends Construct {
             
             // maybe change name to 'pull-mode-sample-app'?
             metadata: {
-                name: 'sample-app',
+                name: 'pull-mode-sample-app',
                 namespace: props.namespaceConstruct.name,
                 labels: {
-                    name: 'sample-app',
+                    name: 'pull-mode-sample-app',
                 }
             },
 
@@ -26,20 +26,20 @@ export class PullModeSampleAppDeploymentConstruct extends Construct {
 
                 selector: {
                     matchLabels: {
-                        app: props.sampleAppLabelSelector
+                        app: props.sampleAppLabel
                     }
                 },
 
                 template: {
                     metadata: {
                         labels: {
-                            app: props.sampleAppLabelSelector
+                            app: props.sampleAppLabel
                         }
                     },
 
                     spec: {
                         containers: [
-                                {
+                            {
                                 name: 'sample-app',
                                 image: props.sampleAppImageURI,
                                 imagePullPolicy: 'Always',
@@ -90,7 +90,7 @@ export class PullModeSampleAppDeploymentConstruct extends Construct {
 export interface PullModeSampleAppDeploymentConstructProps {
     cluster: Cluster | FargateCluster
     namespaceConstruct: NamespaceConstruct
-    sampleAppLabelSelector: string
+    sampleAppLabel: string
     sampleAppImageURI: string
     listenAddressHost: string
     listenAddressPort: number

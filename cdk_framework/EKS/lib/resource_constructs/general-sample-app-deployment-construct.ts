@@ -11,6 +11,13 @@ export class GeneralSampleAppDeploymentConstruct extends Construct {
     constructor(scope: Construct, id: string, props: GeneralSampleAppDeploymentConstructProps){
          super(scope, id);
 
+        new SampleAppServiceConstruct(this, 'sample-app-service-construct', {
+            cluster: props.cluster,
+            namespaceConstruct: props.namespaceConstruct,
+            sampleAppLabel: props.sampleAppLabel,
+            listenAddressPort: props.listenAddressPort
+        })
+
         if (props.sampleAppMode === 'push'){
             if (props.grpcServiceName == undefined) {
                 throw new Error('No GRPC Service name provided')
@@ -30,10 +37,10 @@ export class GeneralSampleAppDeploymentConstruct extends Construct {
             if (props.httpPort == undefined) {
                 throw new Error('No HTTP port provided')
             }
-            const pushModeSampleAppDeploymentConstruct = new PushModeSampleAppDeploymentConstruct(this, 'push-mode-sample-app-construct', {
+            new PushModeSampleAppDeploymentConstruct(this, 'push-mode-sample-app-construct', {
                 cluster: props.cluster,
                 namespaceConstruct: props.namespaceConstruct,
-                sampleAppLabelSelector: props.sampleAppLabel,
+                sampleAppLabel: props.sampleAppLabel,
                 sampleAppImageURI: props.sampleAppImageURI,
                 grpcServiceName: props.grpcServiceName,
                 grpcPort: props.grpcPort,
@@ -47,21 +54,14 @@ export class GeneralSampleAppDeploymentConstruct extends Construct {
             })
         }
         else if (props.sampleAppMode === 'pull'){
-            const pullModeSampleAppDeploymentConstruct = new PullModeSampleAppDeploymentConstruct(this, 'pull-mode-sample-app-construct', {
+            new PullModeSampleAppDeploymentConstruct(this, 'pull-mode-sample-app-construct', {
                 cluster: props.cluster,
                 namespaceConstruct: props.namespaceConstruct,
-                sampleAppLabelSelector: props.sampleAppLabel,
+                sampleAppLabel: props.sampleAppLabel,
                 sampleAppImageURI: props.sampleAppImageURI,
                 listenAddressHost: props.listenAddressHost,
                 listenAddressPort: props.listenAddressPort,
                 region: props.region
-            })
-
-            const sampleAppServiceConstruct = new SampleAppServiceConstruct(this, 'sample-app-service-construct', {
-                cluster: props.cluster,
-                namespaceConstruct: props.namespaceConstruct,
-                sampleAppLabel: props.sampleAppLabel,
-                listenAddressPort: props.listenAddressPort
             })
         }
     }

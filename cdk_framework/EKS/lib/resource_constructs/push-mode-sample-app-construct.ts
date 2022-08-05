@@ -17,11 +17,11 @@ export class PushModeSampleAppDeploymentConstruct extends Construct {
          
             // maybe change name to 'push-mode-sample-app'?
             metadata: {
-                name: 'sample-app',
+                name: 'push-mode-sample-app',
                 // namespace: var.aoc_namespace,
                 namespace: props.namespaceConstruct.name,
                 labels: {
-                    app: 'sample-app'
+                    app: 'push-mode-sample-app'
                 }
             },
 
@@ -31,7 +31,7 @@ export class PushModeSampleAppDeploymentConstruct extends Construct {
                 selector: {
                     matchLabels: {
                         // app: local.sample_app_label_selector
-                        app: props.sampleAppLabelSelector
+                        app: props.sampleAppLabel
                     }
                 },
 
@@ -39,7 +39,7 @@ export class PushModeSampleAppDeploymentConstruct extends Construct {
                     metadata: {
                         labels: {
                             // app: local.sample_app_label_selector
-                            app: props.sampleAppLabelSelector
+                            app: props.sampleAppLabel
                         }
                     },
 
@@ -139,7 +139,7 @@ export class PushModeSampleAppDeploymentConstruct extends Construct {
 export interface PushModeSampleAppDeploymentConstructProps {
       cluster: Cluster | FargateCluster
       namespaceConstruct: NamespaceConstruct
-      sampleAppLabelSelector: string
+      sampleAppLabel: string
       sampleAppImageURI: string
       listenAddressHost: string
       listenAddressPort: number

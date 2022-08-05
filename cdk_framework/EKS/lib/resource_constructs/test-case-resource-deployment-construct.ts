@@ -28,7 +28,7 @@ export class TestCaseResourceDeploymentConstruct extends Construct {
         const httpPort = 4318
 
         // sample app deployment
-        const sampleAppLabel = 'sample-app'
+        const sampleAppLabel = props.sampleAppMode === 'push' ? 'push-mode-sample-app' : 'pull-mode-sample-app'
         const listenAddressHost = '0.0.0.0'
         const listenAddressPort = 8080
         const sampleAppDeploymentConstructProps : GeneralSampleAppDeploymentConstructProps = {
