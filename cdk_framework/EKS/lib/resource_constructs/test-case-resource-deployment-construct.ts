@@ -31,7 +31,7 @@ export class TestCaseResourceDeploymentConstruct extends Construct {
         const sampleAppLabel = 'sample-app'
         const listenAddressHost = '0.0.0.0'
         const listenAddressPort = 8080
-        const sampleAppDeploymentConstructProps : GeneralCollectorDeploymentConstructProps = {
+        const sampleAppDeploymentConstructProps : GeneralSampleAppDeploymentConstructProps = {
             cluster: props.cluster,
             namespaceConstruct: collectorNamespaceConstruct,
             sampleAppLabel: sampleAppLabel,

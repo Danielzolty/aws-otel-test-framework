@@ -22,10 +22,12 @@ export class SampleAppServiceConstruct extends Construct {
             },
 
             spec:{
-                ports: {
-                    name: 'metrics',
-                    port: 8080
-                },
+                ports: [
+                    {
+                        name: 'metrics',
+                        port: props.listenAddressPort
+                    }
+                ],
                 selector: {
                     app: props.sampleAppLabel
                 },
@@ -42,4 +44,5 @@ export interface SampleAppServiceConstructProps {
     cluster: Cluster | FargateCluster
     namespaceConstruct: NamespaceConstruct
     sampleAppLabel: string
+    listenAddressPort: number
 }

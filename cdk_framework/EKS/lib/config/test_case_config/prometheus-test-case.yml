@@ -12,7 +12,7 @@ test_case:
           scrape_configs:
           - job_name: "test-prometheus-sample-app"
             static_configs:
-            - targets: [ prometheus-sample-app-service:8080 ]
+            - targets: [ sample-app-service:8080 ]
     exporters:
       logging:
         logLevel: debug

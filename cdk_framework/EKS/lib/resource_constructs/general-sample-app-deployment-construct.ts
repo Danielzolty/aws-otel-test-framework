@@ -3,10 +3,10 @@ import { Cluster, FargateCluster } from 'aws-cdk-lib/aws-eks';
 import { PushModeSampleAppDeploymentConstruct } from './push-mode-sample-app-construct';
 import { PullModeSampleAppDeploymentConstruct } from './pull-mode-sample-app-construct';
 import { NamespaceConstruct } from './namespace-construct';
+import { SampleAppServiceConstruct } from './sample-app-service-construct';
 
 
 export class GeneralSampleAppDeploymentConstruct extends Construct {
-    sampleAppDeployment: Construct
 
     constructor(scope: Construct, id: string, props: GeneralSampleAppDeploymentConstructProps){
          super(scope, id);
@@ -45,7 +45,6 @@ export class GeneralSampleAppDeploymentConstruct extends Construct {
                 listenAddressPort: props.listenAddressPort,
                 region: props.region
             })
-            this.sampleAppDeployment = pushModeSampleAppDeploymentConstruct.pushModeSampleAppDeployment
         }
         else if (props.sampleAppMode === 'pull'){
             const pullModeSampleAppDeploymentConstruct = new PullModeSampleAppDeploymentConstruct(this, 'pull-mode-sample-app-construct', {
@@ -57,7 +56,13 @@ export class GeneralSampleAppDeploymentConstruct extends Construct {
                 listenAddressPort: props.listenAddressPort,
                 region: props.region
             })
-           this.sampleAppDeployment = pullModeSampleAppDeploymentConstruct.pullModeSampleAppDeployment
+
+            const sampleAppServiceConstruct = new SampleAppServiceConstruct(this, 'sample-app-service-construct', {
+                cluster: props.cluster,
+                namespaceConstruct: props.namespaceConstruct,
+                sampleAppLabel: props.sampleAppLabel,
+                listenAddressPort: props.listenAddressPort
+            })
         }
     }
 }
