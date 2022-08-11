@@ -6,7 +6,6 @@ import { VPCStack } from './stacks/vpc-stack';
 import { aws_eks as eks} from 'aws-cdk-lib';
 import { readFileSync} from 'fs';
 import { EC2Stack } from './stacks/ec2-cluster-stack';
-import { FargateCluster } from 'aws-cdk-lib/aws-eks';
 import { FargateStack } from './stacks/fargate-cluster-stack';
 const yaml = require('js-yaml')
 
