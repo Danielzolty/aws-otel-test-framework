@@ -1,11 +1,14 @@
 #!/usr/bin/env node
 import 'source-map-support/register';
 import * as cdk from 'aws-cdk-lib';
-import { validateClustersConfig } from './utils/validate-cluster-config';
+import { schemaValidator} from './utils/validate-cluster-config';
 import { VPCStack } from './stacks/vpc-stack';
 import { aws_eks as eks} from 'aws-cdk-lib';
 import { ClusterStack } from './stacks/cluster-stack';
 import { readFileSync} from 'fs';
+import { EC2Stack } from './stacks/ec2-cluster-stack';
+import { FargateCluster } from 'aws-cdk-lib/aws-eks';
+import { FargateStack } from './stacks/fargate-cluster-stack';
 const yaml = require('js-yaml')
 
 
@@ -29,22 +32,32 @@ export function deployClusters(app: cdk.App) : Map<string, ClusterStack> {
       }
     })
 
-    validateClustersConfig(configData)
-    for(const [key, value] of Object.entries(configData['clusters'])){
-      const val = Object(value)
-      const versionKubernetes = eks.KubernetesVersion.of(String(val['version']));
-      const newStack = new ClusterStack(app, key + 'EKSCluster', {
-        launchType: (val['launch_type']),
-        name: key,
-        vpc: vpcStack.vpc,
-        version: versionKubernetes,
-        env: {
-          region: REGION
-        },
-      })
-        
-    
-      eksClusterMap.set(key, newStack)
+    schemaValidator(configData)
+    for(const cluster of configData['clusters']){
+      const versionKubernetes = eks.KubernetesVersion.of(String(cluster['version']));
+      let stack;
+      if(String(cluster['launch_type']) === 'ec2'){
+        stack = new EC2Stack(app, cluster['name'] + 'EKSCluster', {
+          name: String(cluster['name']),
+          vpc: vpcStack.vpc,
+          version: versionKubernetes,
+          ec2_instance:  String(cluster['ec2_instance']),
+          node_size:  String(cluster['node_size']),
+          env: {
+            region: REGION
+          },
+        })
+      } else {
+        stack = new FargateStack(app, cluster['name'] + 'EKSCluster', {
+          name: String(cluster['name']),
+          vpc: vpcStack.vpc,
+          version: versionKubernetes,
+          env: {
+            region: REGION
+          },
+        })
+      }
+      eksClusterMap.set(cluster['name'], stack)
     }
 
     return eksClusterMap

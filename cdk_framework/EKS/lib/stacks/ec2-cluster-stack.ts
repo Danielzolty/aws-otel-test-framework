@@ -5,10 +5,10 @@ import { KubernetesVersion} from 'aws-cdk-lib/aws-eks';
 import { ManagedPolicy, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam';
 
 
-export class ClusterStack extends Stack {
+export class EC2Stack extends Stack {
   cluster : eks.Cluster | eks.FargateCluster
 
-  constructor(scope: Construct, id: string, props: ClusterStackProps) {
+  constructor(scope: Construct, id: string, props: EC2ClusterStackProps) {
     super(scope, id, props);
 
     const logging = [
@@ -32,40 +32,29 @@ export class ClusterStack extends Stack {
         ManagedPolicy.fromAwsManagedPolicyName('AmazonEKS_CNI_Policy')
       ]
     });
-    if(props.launchType['ec2'] !== undefined){
-      this.cluster = new eks.Cluster(this, props.name, {
-        clusterName: props.name,
-        vpc: props.vpc,
-        vpcSubnets: [{subnetType: ec2.SubnetType.PUBLIC}],
-        defaultCapacity: 0,  // we want to manage capacity our selves
-        version: props.version,
-        clusterLogging: logging,
-      
-      });
-      const instanceType = props.launchType['ec2']['ec2_instance']
-      const instanceSize = props.launchType['ec2']['node_size']
-      this.cluster.addNodegroupCapacity('ng-' + instanceType, {
-          instanceTypes: [new ec2.InstanceType(instanceType + '.' + instanceSize)],
-          minSize: 2,
-          nodeRole: workerRole
-      })
-    } else if (props.launchType['fargate'] !== undefined){
-      this.cluster = new eks.FargateCluster(this, props.name, {
-        clusterName: props.name,
-        vpc: props.vpc,
-        version: props.version,
-        clusterLogging: logging
-      });
-    } 
+    this.cluster = new eks.Cluster(this, props.name, {
+    clusterName: props.name,
+    vpc: props.vpc,
+    vpcSubnets: [{subnetType: ec2.SubnetType.PUBLIC}],
+    defaultCapacity: 0,  // we want to manage capacity our selves
+    version: props.version,
+    clusterLogging: logging,
     
+    });
+    this.cluster.addNodegroupCapacity('ng-' + props.ec2_instance, {
+        instanceTypes: [new ec2.InstanceType(props.ec2_instance + '.' + props.node_size)],
+        minSize: 2,
+        nodeRole: workerRole
+    })
     this.cluster.awsAuth.addMastersRole(Role.fromRoleName(this, 'eks_admin_role', 'Admin'))
 
   }
 }
 
-export interface ClusterStackProps extends StackProps{
-    launchType: any;
+export interface EC2ClusterStackProps extends StackProps{
     name: string;
     vpc: Vpc;
     version: KubernetesVersion;
+    ec2_instance: string;
+    node_size: string
 }
