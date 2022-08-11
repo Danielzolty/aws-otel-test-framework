@@ -4,7 +4,6 @@ import * as cdk from 'aws-cdk-lib';
 import { schemaValidator} from './utils/validate-cluster-config';
 import { VPCStack } from './stacks/vpc-stack';
 import { aws_eks as eks} from 'aws-cdk-lib';
-import { ClusterStack } from './stacks/cluster-stack';
 import { readFileSync} from 'fs';
 import { EC2Stack } from './stacks/ec2-cluster-stack';
 import { FargateCluster } from 'aws-cdk-lib/aws-eks';
@@ -12,7 +11,7 @@ import { FargateStack } from './stacks/fargate-cluster-stack';
 const yaml = require('js-yaml')
 
 
-export function deployClusters(app: cdk.App) : Map<string, ClusterStack> {
+export function deployClusters(app: cdk.App) : Map<string, FargateStack | EC2Stack> {
     const REGION = process.env.REGION || 'us-west-2'
 
     const route = process.env.CDK_CONFIG_PATH ||  __dirname + '/config/cluster-config/clusters.yml';
@@ -24,7 +23,7 @@ export function deployClusters(app: cdk.App) : Map<string, ClusterStack> {
     const raw = readFileSync(route)
     const configData = yaml.load(raw)
 
-    const eksClusterMap = new Map<string, ClusterStack>();
+    const eksClusterMap = new Map<string, FargateStack | EC2Stack>();
     
     const vpcStack = new VPCStack(app, 'EKSVpc', {
       env: {
