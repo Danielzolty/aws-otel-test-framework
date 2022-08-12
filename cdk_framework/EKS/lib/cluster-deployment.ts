@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 import 'source-map-support/register';
 import * as cdk from 'aws-cdk-lib';
-import { schemaValidator} from './utils/validate-cluster-config';
 import { VPCStack } from './stacks/vpc-stack';
 import { aws_eks as eks} from 'aws-cdk-lib';
 import { readFileSync} from 'fs';
