@@ -58,6 +58,9 @@ export function schemaValidator(info: unknown){
     }
     const clusterInfo = data['clusters']
     for(const name of clusterInfo){
-        validateSchema(name, { schema: requiredSchema })
+        const validationErrors = validateSchema(name, { schema: requiredSchema })
+        if(Object.entries(validationErrors).length > 0){
+            throw new Error("There was an error")
+        }
     }
 }
